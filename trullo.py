@@ -26,3 +26,4 @@ if __name__ == '__main__':
 
     if args['l']:
         print(tclient.get('/members/me/boards'))
+
