@@ -8,7 +8,7 @@ TRELLO_API_KEY
 usage:
     trullo l
     trullo e <item-id>
-    trullo d <board-id>
+    trullo d <item-id>
     trullo c (<c> | <l> | <b>)
 
     -h --help this help message
@@ -25,5 +25,10 @@ if __name__ == '__main__':
     tclient = TClient()
 
     if args['l']:
-        print(tclient.get('/members/me/boards'))
-
+        res = tclient.get('/members/me/boards')
+        counter = 1
+        for item in res:
+            for k, v in item.items():
+                if k == 'name':
+                    print(f'{counter} {v}')
+            counter += 1

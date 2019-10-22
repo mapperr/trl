@@ -14,5 +14,8 @@ class TClient:
     def build_auth_params(self) -> Dict[str, str]:
         return {'key': self.trello_api_key, 'token': self.trello_token}
 
-    def get(self, path: str) -> str:
+    def get(self, path: str) -> Dict:
         return requests.get(self.base_url + path, self.build_auth_params()).json()
+
+    def get_boards(self) -> Dict[str, str]:
+        
