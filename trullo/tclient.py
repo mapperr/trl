@@ -22,20 +22,44 @@ class TClient:
         return requests.get(self.base_url + path, self.build_auth_params()).json()
 
     def get_boards(self) -> List[TrlBoard]:
-        res = self.get('/members/me/boards')
+        res = self.get('/members/me/boards?lists=open')
         boards = list()
         for raw_board in res:
             board_id = ''
+            board_closed = False
             for k, v in raw_board.items():
+                if k == 'closed':
+                    board_closed = v
                 if k == 'id':
                     board_id = v
-            boards.append(TrlBoard(board_id, list(), raw_board))
+                if k == 'lists':
+                    lists: List[TrlList] = self._extract_lists(v)
+            if not board_closed:
+                boards.append(TrlBoard(board_id, lists, raw_board))
         return boards
 
     def get_lists(self, board_id: str = None) -> List[TrlList]:
-        api_path = '/members/me/lists'
         if board_id is not None:
-            api_path = f'/boards/{board_id}/lists'
+            return get_board_lists(board_id)
+
+        boards = self.get_boards()
+        lists = list()
+        for board in boards:
+           lists.append(board.lists)
+        return lists
+
+    def _extract_lists(self, raw_list: Dict) -> List[TrlList]:
+        lists = list()
+        for raw_data in raw_list:
+            id_ = ''
+            for k, v in raw_data.items():
+                if k == 'id':
+                    id_ = v
+            lists.append(TrlList(id_, list(), raw_data))
+        return lists
+
+    def get_board_lists(self, board_id: str) -> List[TrlList]:
+        api_path = f'/boards/{board_id}/lists'
         res = self.get(api_path)
         lists = list()
         for raw_data in res:
@@ -64,3 +88,16 @@ class TClient:
         api_path = f'/cards/{card_id}'
         res = self.get(api_path)
         return TrlCard(res['id'], res)
+
+    def get_tree(self) -> List[TrlBoard]:
+        cards = self.get_cards()
+        boards = self.get_boards()
+
+        for card in cards:
+            for board in boards:
+                for list_ in board.lists:
+                    if card.raw_data['idList'] == list_.id:
+                        list_.cards.append(card)
+
+        return boards
+

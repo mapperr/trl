@@ -7,7 +7,7 @@ TRELLO_API_KEY
 
 usage:
     trl l [ <board_id> [ <list_id> [ <card_id> ] ] ]
-    trl c
+    trl b
     trl g <api_path>
 
     -h --help this help message
@@ -15,6 +15,7 @@ usage:
 
 """
 
+import pprint
 from docopt import docopt
 
 from trullo.printer import Printer
@@ -27,11 +28,12 @@ if __name__ == '__main__':
 
     if args['g']:
         api_path = args['<api_path>']
-        print(tclient.get(api_path))
+        pp = pprint.PrettyPrinter(indent=4)
+        pp.pprint(tclient.get(api_path))
 
-    if args['c']:
-        cards = tclient.get_cards()
-        Printer.print_cards(cards)
+    if args['b']:
+        boards = tclient.get_tree()
+        Printer.print_boards(boards)
 
     if args['l']:
         board_id = args['<board_id>']
@@ -51,3 +53,4 @@ if __name__ == '__main__':
         else:
             boards = tclient.get_boards()
             Printer.print_boards(boards)
+
