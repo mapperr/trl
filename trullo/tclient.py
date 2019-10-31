@@ -35,12 +35,23 @@ class TClient:
                 if k == 'lists':
                     lists: List[TrlList] = self._extract_lists(v)
             if not board_closed:
-                boards.append(TrlBoard(board_id, lists, raw_board))
+                boards.append(TrlBoard(board_id, raw_board['shortLink'], lists, [], raw_board))
         return boards
+
+    def get_board(self, board_id: str) -> TrlBoard:
+        res = self.get(f'/batch?urls=/board/{board_id},/board/{board_id}/lists/open,/board/{board_id}/cards/open')
+        board = TrlBoard(board_id, board_id, [], [], res[0]['200'])
+        for item in res[1]['200']:
+            list_ = TrlList(item['id'], item)
+            board.lists.append(list_)
+        for item in res[2]['200']:
+            card = TrlCard(item['id'], item['shortLink'], item)
+            board.cards.append(card)
+        return board
 
     def get_lists(self, board_id: str = None) -> List[TrlList]:
         if board_id is not None:
-            return get_board_lists(board_id)
+            return self.get_board_lists(board_id)
 
         boards = self.get_boards()
         lists = list()
@@ -55,7 +66,7 @@ class TClient:
             for k, v in raw_data.items():
                 if k == 'id':
                     id_ = v
-            lists.append(TrlList(id_, list(), raw_data))
+            lists.append(TrlList(id_, raw_data))
         return lists
 
     def get_board_lists(self, board_id: str) -> List[TrlList]:
@@ -67,7 +78,7 @@ class TClient:
             for k, v in raw_data.items():
                 if k == 'id':
                     id_ = v
-            lists.append(TrlList(id_, list(), raw_data))
+            lists.append(TrlList(id_, raw_data))
         return lists
 
     def get_cards(self, list_id: str = None) -> List[TrlCard]:
@@ -75,29 +86,19 @@ class TClient:
         if list_id is not None:
             api_path = f'/lists/{list_id}/cards'
         res = self.get(api_path)
+        return self._extract_cards(res)
+
+    def _extract_cards(self, raw_list: Dict) -> List[TrlCard]:
         cards = list()
-        for raw_card in res:
+        for raw_card in raw_list:
             card_id = ''
             for k, v in raw_card.items():
                 if k == 'id':
                     card_id = v
-            cards.append(TrlCard(card_id, raw_card))
+            cards.append(TrlCard(card_id, raw_card['shortLink'], raw_card))
         return cards
 
     def get_card(self, card_id: str = None) -> TrlCard:
         api_path = f'/cards/{card_id}'
         res = self.get(api_path)
-        return TrlCard(res['id'], res)
-
-    def get_tree(self) -> List[TrlBoard]:
-        cards = self.get_cards()
-        boards = self.get_boards()
-
-        for card in cards:
-            for board in boards:
-                for list_ in board.lists:
-                    if card.raw_data['idList'] == list_.id:
-                        list_.cards.append(card)
-
-        return boards
-
+        return TrlCard(res['id'], res['shortLink'], res)

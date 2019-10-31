@@ -6,4 +6,5 @@ import attr
 @attr.s(auto_attribs=True)
 class TrlCard:
     id: str
+    shortcut: str
     raw_data: Dict

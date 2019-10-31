@@ -1,4 +1,3 @@
-import pprint
 from typing import List
 
 import attr
@@ -6,40 +5,47 @@ import attr
 from trullo.shortener import Shortener
 from trullo.trl_board import TrlBoard
 from trullo.trl_card import TrlCard
-from trullo.trl_list import TrlList
 
 
 @attr.s(auto_attribs=True)
 class Printer:
     @staticmethod
     def print_boards(boards: List[TrlBoard]):
-        # symbol_count = Shortener.get_min_symbols_to_uniq([board.id for board in boards])
+        symbol_count = Shortener.get_min_symbols_to_uniq([board.shortcut.lower() for board in boards])
         for board in boards:
-            # print(f"{board.id[0:symbol_count]} [{board.id}] {board.raw_data['name']}")
-            # print(f"[{board.id}] {board.raw_data['name']}")
-            print(f"{board.raw_data['name']}")
-            if board.lists is not None:
-                Printer.print_lists(board.lists, '\t')
+            print(f"[{board.shortcut[0:symbol_count].lower()}] {board.raw_data['name']}")
 
     @staticmethod
-    def print_lists(lists: List[TrlList], prefix: str = ''):
-        # symbol_count = Shortener.get_min_symbols_to_uniq([list_.id for list_ in lists])
-        for list_ in lists:
-            # print(f"{prefix}{list_.id[0:symbol_count]} [{list_.id}] {list_.raw_data['name']}")
-            # print(f"{prefix}[{list_.id}] {list_.raw_data['name']}")
-            print(f"{prefix}{list_.raw_data['name']}")
-            if list_.cards is not None:
-                Printer.print_cards(list_.cards, f'{prefix}\t')
-
-    @staticmethod
-    def print_cards(cards: List[TrlCard], prefix: str = ''):
-        symbol_count = Shortener.get_min_symbols_to_uniq([card.raw_data['shortLink'] for card in cards])
-        for card in cards:
-            # print(f"{prefix}{card.id[0:symbol_count]} [{card.id}] {card.raw_data['name']}")
-            # print(f"{prefix}[{card.id}] {card.raw_data['name']}")
-            print(f"{prefix}[{card.raw_data['shortLink'][0:symbol_count]}] {card.raw_data['name']}")
+    def print_board(board: TrlBoard, list_shortcut: str = None):
+        symbol_count_cards = Shortener.get_min_symbols_to_uniq([card.shortcut for card in board.cards])
+        symbol_count_lists = Shortener.get_min_symbols_to_uniq([list_.id for list_ in board.lists], True)
+        print(f"Board: {board.raw_data['name']}\n")
+        if board.lists is not None:
+            for list_ in board.lists:
+                if list_shortcut is not None and not list_.id.lower().endswith(list_shortcut):
+                    continue
+                print(
+                    f"[{list_.id[len(list_.id) - symbol_count_lists:len(list_.id)].lower()}] {list_.raw_data['name']}")
+                for card in board.cards:
+                    if card.raw_data['idList'] == list_.id:
+                        print(f"\t[{card.shortcut[0:symbol_count_cards].lower()}] {card.raw_data['name']}")
 
     @staticmethod
     def print_card(card: TrlCard):
-        pp = pprint.PrettyPrinter(indent=4)
-        pp.pprint(card.raw_data)
+        # pp = pprint.PrettyPrinter(indent=4).pprint(card.raw_data)
+        d = card.raw_data
+
+        formatted_desc = '\t' + str(d['desc']).replace('\n', '\n\t')
+
+        print()
+        print(f'{d["name"]}')
+        print('-------------------------------------')
+        for l in d['labels']:
+            print(f'({l["name"]})\t', end='')
+        print()
+        print()
+        print(formatted_desc)
+        print()
+        print()
+        print(f'{d["shortUrl"]}')
+        print()

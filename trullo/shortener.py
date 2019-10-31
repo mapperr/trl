@@ -6,12 +6,17 @@ import attr
 @attr.s(auto_attribs=True)
 class Shortener:
     @staticmethod
-    def get_min_symbols_to_uniq(strings: List[str]) -> int:
+    def get_min_symbols_to_uniq(strings: List[str], end: bool = False) -> int:
         symbol_counter = 1
         longest_item_length = Shortener.get_longest_item_length(strings)
-        while symbol_counter < longest_item_length \
-                and Shortener.are_there_duplicates([el[0:symbol_counter] for el in strings]):
-            symbol_counter += 1
+        if end:
+            while symbol_counter < longest_item_length \
+                    and Shortener.are_there_duplicates([el[len(el)-symbol_counter:len(el)].lower() for el in strings]):
+                symbol_counter += 1
+        else:
+            while symbol_counter < longest_item_length \
+                    and Shortener.are_there_duplicates([el[0:symbol_counter].lower() for el in strings]):
+                symbol_counter += 1
         return symbol_counter
 
     @staticmethod
