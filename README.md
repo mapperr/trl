@@ -44,6 +44,6 @@ Here is the usage:
 
 ## Notes
 
-I know, It's nothing fancy, but I just started it to check some trello stuff
+I know, It's nothing fancy, I just started it to check some trello stuff
 directly in the terminal, and eventually edit them.
 
