@@ -14,7 +14,7 @@ Authenticate yourself:
     export TRELLO_API_KEY=<api_key>
     export TRELLO_TOKEN=<your_token>
 
-Go get them on (trello)[https://trello.com/app-key] now!
+Go get them on [trello](https://trello.com/app-key) now!
 
 And, that's it, you are good to go.
 
