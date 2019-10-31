@@ -102,3 +102,13 @@ class TClient:
         if board_id is not None:
             api_path += f'&idBoard={board_id}'
         self.put(api_path)
+
+    def edit_card(self, card_id: str, name: str = None, desc: str = None):
+        api_path = f'/cards/{card_id}?'
+        if name is not None:
+            api_path += '' if api_path.endswith('?') else '&'
+            api_path += f'name={name}'
+        if desc is not None:
+            api_path += '' if api_path.endswith('?') else '&'
+            api_path += f'desc={desc}'
+        self.put(api_path)

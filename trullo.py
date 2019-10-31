@@ -3,7 +3,7 @@
 usage:
     trl b [<board_shortcut>]
     trl l [<list_shortcut>]
-    trl c <card_shortcut> [o | m <list_shortcut>]
+    trl c <card_shortcut> [o | m <list_shortcut> | e]
     trl g <api_path>
     trl -h
 
@@ -39,6 +39,7 @@ env:
 import os
 import pprint
 import subprocess
+import tempfile
 
 from docopt import docopt
 
@@ -95,11 +96,26 @@ if __name__ == '__main__':
 
         open_command = args['o']
         move_command = args['m']
+        edit_command = args['e']
         if open_command:
-            subprocess.call(['xdg-open', card.raw_data['shortUrl']])
+            subprocess.Popen(['xdg-open', card.raw_data['shortUrl']])
         elif move_command:
             target_list_shortcut = args['<list_shortcut>']
             list_id = [list_.id for list_ in board.lists if list_.id.lower().endswith(target_list_shortcut)][0]
             tclient.move_card(card.id, list_id)
+        elif edit_command:
+            tmpfile_path = f'{tempfile.gettempdir()}/trl-{card.id}'
+            with open(tmpfile_path, 'w') as fd:
+                clean_card_name = str(card.raw_data['name']).replace('\n', '')
+                fd.writelines(
+                    f"# The line below is the card title, lines after that are the card description\n"
+                    f"{clean_card_name}\n\n{card.raw_data['desc']}")
+
+            subprocess.Popen(['xdg-open', tmpfile_path]).wait()
+            with open(tmpfile_path, 'r') as fd:
+                lines = fd.readlines()
+            tclient.edit_card(card.id,
+                              lines[1].replace('\n', ''),
+                              str.join('', lines[2:]))
         else:
             Printer.print_card(card)

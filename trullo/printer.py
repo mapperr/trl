@@ -36,17 +36,16 @@ class Printer:
 
     @staticmethod
     def print_card(card: TrlCard):
-        # pp = pprint.PrettyPrinter(indent=4).pprint(card.raw_data)
         d = card.raw_data
-
         formatted_desc = '\t' + str(d['desc']).replace('\n', '\n\t')
 
         print(f'{d["shortUrl"]}')
         print('-------------------------------------')
         print(f'{d["name"]}')
-        print()
+        if len(d['labels']) > 0:
+            print()
         for l in d['labels']:
-            print(f'({l["name"]})  ', end='')
+            print(f'({l["name"] if l["name"] is not None and l["name"] != "" else l["color"]})  ', end='')
         print()
         print(formatted_desc)
         print()
