@@ -3,7 +3,7 @@
 usage:
     trl b [<board_shortcut>]
     trl l [<list_shortcut>]
-    trl c <card_shortcut> [o]
+    trl c <card_shortcut> [o | m <list_shortcut>]
     trl g <api_path>
     trl -h
 
@@ -19,9 +19,10 @@ commands:
         shows the board you have currently selected
         with list_shortcut you can show a single list
 
-    c <card_shortcut> [o]
+    c <card_shortcut> [o | m <list_shortcut>]
         shows the card infos
         with o it opens the card shortUrl with your default application (launch xdg-open)
+        with m and a target list you can move the card to that list
 
     g <api_path>
         make a direct api call adding auth params automatically (for debugging/hacking purpose)
@@ -74,7 +75,7 @@ if __name__ == '__main__':
             else:
                 print(f'\nselect a board with `trl b <board_shortcut>`')
 
-    # stuff that works if a board is selected
+    # stuff that works only if a board is selected
     if not args['b'] and not os.path.exists(selected_board_filepath):
         print(f'first select a board with `trl b`')
         exit(1)
@@ -93,7 +94,12 @@ if __name__ == '__main__':
         card = tclient.get_card([card.id for card in board.cards if card.shortcut.lower().startswith(card_shortcut)][0])
 
         open_command = args['o']
+        move_command = args['m']
         if open_command:
             subprocess.call(['xdg-open', card.raw_data['shortUrl']])
+        elif move_command:
+            target_list_shortcut = args['<list_shortcut>']
+            list_id = [list_.id for list_ in board.lists if list_.id.lower().endswith(target_list_shortcut)][0]
+            tclient.move_card(card.id, list_id)
         else:
             Printer.print_card(card)

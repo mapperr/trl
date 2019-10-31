@@ -21,19 +21,23 @@ class TClient:
     def get(self, path: str) -> Dict:
         return requests.get(self.base_url + path, self.build_auth_params()).json()
 
+    def put(self, path: str) -> Dict:
+        return requests.put(self.base_url + path, self.build_auth_params()).json()
+
     def get_boards(self) -> List[TrlBoard]:
         res = self.get('/members/me/boards?lists=open')
         boards = list()
         for raw_board in res:
             board_id = ''
             board_closed = False
+            lists: List[TrlList] = []
             for k, v in raw_board.items():
                 if k == 'closed':
                     board_closed = v
                 if k == 'id':
                     board_id = v
                 if k == 'lists':
-                    lists: List[TrlList] = self._extract_lists(v)
+                    lists = self._extract_lists(v)
             if not board_closed:
                 boards.append(TrlBoard(board_id, raw_board['shortLink'], lists, [], raw_board))
         return boards
@@ -48,16 +52,6 @@ class TClient:
             card = TrlCard(item['id'], item['shortLink'], item)
             board.cards.append(card)
         return board
-
-    def get_lists(self, board_id: str = None) -> List[TrlList]:
-        if board_id is not None:
-            return self.get_board_lists(board_id)
-
-        boards = self.get_boards()
-        lists = list()
-        for board in boards:
-           lists.append(board.lists)
-        return lists
 
     def _extract_lists(self, raw_list: Dict) -> List[TrlList]:
         lists = list()
@@ -102,3 +96,9 @@ class TClient:
         api_path = f'/cards/{card_id}'
         res = self.get(api_path)
         return TrlCard(res['id'], res['shortLink'], res)
+
+    def move_card(self, card_id: str, list_id: str, board_id: str = None):
+        api_path = f'/cards/{card_id}?idList={list_id}'
+        if board_id is not None:
+            api_path += f'&idBoard={board_id}'
+        self.put(api_path)
