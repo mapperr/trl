@@ -109,9 +109,9 @@ if __name__ == '__main__':
                 clean_card_name = str(card.raw_data['name']).replace('\n', '')
                 fd.writelines(
                     f"# The line below is the card title, lines after that are the card description\n"
-                    f"{clean_card_name}\n\n{card.raw_data['desc']}")
+                    f"{clean_card_name}\n{card.raw_data['desc']}")
 
-            subprocess.Popen(['xdg-open', tmpfile_path]).wait()
+            subprocess.Popen([os.environ.get('EDITOR'), tmpfile_path]).wait()
             with open(tmpfile_path, 'r') as fd:
                 lines = fd.readlines()
             tclient.edit_card(card.id,
