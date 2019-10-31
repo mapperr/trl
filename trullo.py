@@ -71,7 +71,7 @@ if __name__ == '__main__':
         else:
             Printer.print_boards(boards)
             if os.path.exists(selected_board_filepath):
-                print(f'\ncurrently selected board: {selected_board_name} [{selected_board_id}]')
+                print(f'\ncurrently selected board: {selected_board_name}')
             else:
                 print(f'\nselect a board with `trl b <board_shortcut>`')
 

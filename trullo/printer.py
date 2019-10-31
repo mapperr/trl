@@ -19,7 +19,10 @@ class Printer:
     def print_board(board: TrlBoard, list_shortcut: str = None):
         symbol_count_cards = Shortener.get_min_symbols_to_uniq([card.shortcut for card in board.cards])
         symbol_count_lists = Shortener.get_min_symbols_to_uniq([list_.id for list_ in board.lists], True)
-        print(f"Board: {board.raw_data['name']}\n")
+        print(f"{board.raw_data['shortUrl']}")
+        print('------------------------------')
+        print(f"{board.raw_data['name']}")
+        print()
         if board.lists is not None:
             for list_ in board.lists:
                 if list_shortcut is not None and not list_.id.lower().endswith(list_shortcut):
@@ -29,6 +32,7 @@ class Printer:
                 for card in board.cards:
                     if card.raw_data['idList'] == list_.id:
                         print(f"\t[{card.shortcut[0:symbol_count_cards].lower()}] {card.raw_data['name']}")
+        print()
 
     @staticmethod
     def print_card(card: TrlCard):
@@ -37,15 +41,12 @@ class Printer:
 
         formatted_desc = '\t' + str(d['desc']).replace('\n', '\n\t')
 
-        print()
-        print(f'{d["name"]}')
+        print(f'{d["shortUrl"]}')
         print('-------------------------------------')
-        for l in d['labels']:
-            print(f'({l["name"]})\t', end='')
+        print(f'{d["name"]}')
         print()
+        for l in d['labels']:
+            print(f'({l["name"]})  ', end='')
         print()
         print(formatted_desc)
-        print()
-        print()
-        print(f'{d["shortUrl"]}')
         print()
