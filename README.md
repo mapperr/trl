@@ -9,42 +9,57 @@ Get the repo and run `pipenv install` in it.
 
 Yeah, I know you want a binary, I will package this thing, bear it for now.
 
-Authenticate yourself:
+Authenticate yourself putting these variables in you environment:
 
     export TRELLO_API_KEY=<api_key>
     export TRELLO_TOKEN=<your_token>
 
 Go get them on [trello](https://trello.com/app-key) now!
 
-And, that's it, you are good to go.
+Aaaand, that's it, you are good to go.
 
 
 ## Usage
 
-As for now,
-the workflow is: select a board, view things, edit cards in your browser.
+As for now you can do basic stuff.
 
-Here is the usage:
+Here is the usage (check `trl -h` too):
 
-    b [<board_shortcut>]
+    trl b [<board_shortcut>]
         shows the boards you can access
         with board_shortcut you can select the board you want to work with
 
-    l [<list_shortcut>]
+    trl l [<list_shortcut>]
         shows the board you have currently selected
         with list_shortcut you can show a single list
 
-    c <card_shortcut> [o | m <list_shortcut> | e]
+    trl c <card_shortcut> [o | m <list_shortcut> | e]
         shows the card infos
         with o it opens the card shortUrl with your default browser
         with m and a target list you can move the card to that list
         with e you can edit the card title and description in your editor
 
-    c n <list_shortcut>
+    trl c n <list_shortcut>
         create a new card in the list specified by list_shortcut
 
-    g <api_path>
+    trl g <api_path>
         make a direct api call adding auth params automatically (for debugging/hacking purpose)
+
+## Shortcuts
+
+Shortcuts are derived from boards and cards short urls and from lists ids
+(lists does not have short urls) and are as short as possible.
+
+For example, for cards `trl` gets the shorter unique identifiers by checking
+the short urls of all the cards on the selected board.
+
+So to move a card to a list you get something like this:
+
+    trl c j0 m e
+
+`j0` is the card shortcut and `e` is the list shortcut
+
+Oh, everything is kept lowercase, I know pressing shift is a pain in the ass.
 
 
 ## Notes
