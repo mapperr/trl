@@ -34,10 +34,13 @@ Here is the usage:
         shows the board you have currently selected
         with list_shortcut you can show a single list
 
-    c <card_shortcut> [o | m <list_shortcut>]
+    c <card_shortcut> [o | m <list_shortcut> | e]
         shows the card infos
         with o it opens the card shortUrl with your default application (launch xdg-open)
         with m and a target list you can move the card to that list
+
+    c n <list_shortcut>
+        create a new card in the list specified by list_shortcut
 
     g <api_path>
         make a direct api call adding auth params automatically (for debugging/hacking purpose)

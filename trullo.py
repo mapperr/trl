@@ -3,7 +3,8 @@
 usage:
     trl b [<board_shortcut>]
     trl l [<list_shortcut>]
-    trl c <card_shortcut> [o | m <list_shortcut> | e]
+    trl c <card_shortcut> [o | m <list_shortcut> | e | n <list_shortcut>]
+    trl c n <list_shortcut>
     trl g <api_path>
     trl -h
 
@@ -19,10 +20,13 @@ commands:
         shows the board you have currently selected
         with list_shortcut you can show a single list
 
-    c <card_shortcut> [o | m <list_shortcut>]
+    c <card_shortcut> [o | m <list_shortcut> | e]
         shows the card infos
         with o it opens the card shortUrl with your default application (launch xdg-open)
         with m and a target list you can move the card to that list
+
+    c n <list_shortcut>
+        create a new card in the list specified by list_shortcut
 
     g <api_path>
         make a direct api call adding auth params automatically (for debugging/hacking purpose)
@@ -36,6 +40,7 @@ env:
     you can obtain those values here: https://trello.com/app-key
 
 """
+import logging
 import os
 import pprint
 import subprocess
@@ -45,6 +50,35 @@ from docopt import docopt
 
 from trullo.printer import Printer
 from trullo.tclient import TClient
+from trullo.trl_card import TrlCard
+
+logging.basicConfig(level=logging.DEBUG)
+logging.getLogger('urllib3.connectionpool').setLevel(logging.INFO)
+
+
+def edit_card(card_to_edit: TrlCard = None) -> (str, str):
+    """
+    :param card_to_edit: 
+    :return: a Tuple with the new name and description of the card
+    """
+    tempfile_suffix = 'newcard'
+    clean_card_name = 'New Card Title'
+    card_description = 'New Card Description'
+    if card_to_edit is not None:
+        tempfile_suffix = card.id
+        clean_card_name = str(card_to_edit.raw_data['name']).replace('\n', '')
+        card_description = card_to_edit.raw_data['desc']
+
+    tmpfile_path = f'{tempfile.gettempdir()}/trl-{tempfile_suffix}'
+    with open(tmpfile_path, 'w') as fd:
+        fd.writelines(
+            f"# The line below is the card title, lines after that are the card description\n"
+            f"{clean_card_name}\n{card_description}")
+    subprocess.Popen([os.environ.get('EDITOR'), tmpfile_path]).wait()
+    with open(tmpfile_path, 'r') as fd:
+        lines = fd.readlines()
+    return lines[1].replace('\n', ''), str.join('', lines[2:])
+
 
 if __name__ == '__main__':
     args = docopt(__doc__, version='Trullo beta')
@@ -91,31 +125,28 @@ if __name__ == '__main__':
 
     if args['c']:
         board = tclient.get_board(selected_board_id)
-        card_shortcut = args['<card_shortcut>']
-        card = tclient.get_card([card.id for card in board.cards if card.shortcut.lower().startswith(card_shortcut)][0])
-
-        open_command = args['o']
-        move_command = args['m']
-        edit_command = args['e']
-        if open_command:
-            subprocess.Popen(['xdg-open', card.raw_data['shortUrl']])
-        elif move_command:
+        new_command = args['n']
+        if new_command:
             target_list_shortcut = args['<list_shortcut>']
             list_id = [list_.id for list_ in board.lists if list_.id.lower().endswith(target_list_shortcut)][0]
-            tclient.move_card(card.id, list_id)
-        elif edit_command:
-            tmpfile_path = f'{tempfile.gettempdir()}/trl-{card.id}'
-            with open(tmpfile_path, 'w') as fd:
-                clean_card_name = str(card.raw_data['name']).replace('\n', '')
-                fd.writelines(
-                    f"# The line below is the card title, lines after that are the card description\n"
-                    f"{clean_card_name}\n{card.raw_data['desc']}")
-
-            subprocess.Popen([os.environ.get('EDITOR'), tmpfile_path]).wait()
-            with open(tmpfile_path, 'r') as fd:
-                lines = fd.readlines()
-            tclient.edit_card(card.id,
-                              lines[1].replace('\n', ''),
-                              str.join('', lines[2:]))
+            new_card_name, new_card_desc = edit_card()
+            tclient.new_card(list_id, new_card_name, new_card_desc)
         else:
-            Printer.print_card(card)
+            card_shortcut = args['<card_shortcut>']
+            card = tclient.get_card(
+                [card.id for card in board.cards if card.shortcut.lower().startswith(card_shortcut)][0])
+
+            open_command = args['o']
+            move_command = args['m']
+            edit_command = args['e']
+            if open_command:
+                subprocess.Popen(['xdg-open', card.raw_data['shortUrl']])
+            elif move_command:
+                target_list_shortcut = args['<list_shortcut>']
+                list_id = [list_.id for list_ in board.lists if list_.id.lower().endswith(target_list_shortcut)][0]
+                tclient.move_card(card.id, list_id)
+            elif edit_command:
+                card_new_name, card_new_desc = edit_card(card)
+                tclient.edit_card(card.id, card_new_name, card_new_desc)
+            else:
+                Printer.print_card(card)

@@ -1,3 +1,4 @@
+import logging
 import os
 from typing import Dict, List
 
@@ -7,6 +8,8 @@ import requests
 from trullo.trl_board import TrlBoard
 from trullo.trl_card import TrlCard
 from trullo.trl_list import TrlList
+
+logger = logging.getLogger(__name__)
 
 
 @attr.s(auto_attribs=True)
@@ -18,11 +21,18 @@ class TClient:
     def build_auth_params(self) -> Dict[str, str]:
         return {'key': self.trello_api_key, 'token': self.trello_token}
 
+    def handle_res(self, res) -> Dict:
+        res.raise_for_status()
+        return res.json()
+
     def get(self, path: str) -> Dict:
-        return requests.get(self.base_url + path, self.build_auth_params()).json()
+        return self.handle_res(requests.get(self.base_url + path, self.build_auth_params()))
+
+    def post(self, path: str) -> Dict:
+        return self.handle_res(requests.post(self.base_url + path, self.build_auth_params()))
 
     def put(self, path: str) -> Dict:
-        return requests.put(self.base_url + path, self.build_auth_params()).json()
+        return self.handle_res(requests.put(self.base_url + path, self.build_auth_params()))
 
     def get_boards(self) -> List[TrlBoard]:
         res = self.get('/members/me/boards?lists=open')
@@ -112,3 +122,11 @@ class TClient:
             api_path += '' if api_path.endswith('?') else '&'
             api_path += f'desc={desc}'
         self.put(api_path)
+
+    def new_card(self, list_id: str, name: str = None, desc: str = None):
+        api_path = f'/cards/?idList={list_id}'
+        if name is not None:
+            api_path += f'&name={name}'
+        if desc is not None:
+            api_path += f'&desc={desc}'
+        self.post(api_path)
