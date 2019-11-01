@@ -59,7 +59,7 @@ So to move a card to a list you get something like this:
 
 `j0` is the card shortcut and `e` is the list shortcut
 
-Oh, everything is kept lowercase, I know pressing shift is a pain in the ass.
+Oh, everything is kept lowercase, I know holding shift is a pain in the ass.
 
 
 ## Notes
