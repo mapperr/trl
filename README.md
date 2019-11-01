@@ -36,8 +36,9 @@ Here is the usage:
 
     c <card_shortcut> [o | m <list_shortcut> | e]
         shows the card infos
-        with o it opens the card shortUrl with your default application (launch xdg-open)
+        with o it opens the card shortUrl with your default browser
         with m and a target list you can move the card to that list
+        with e you can edit the card title and description in your editor
 
     c n <list_shortcut>
         create a new card in the list specified by list_shortcut
