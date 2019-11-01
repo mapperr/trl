@@ -7,7 +7,7 @@ A dumb trello cli with shortcuts.
 
 Get the repo and run `pipenv install` in it.
 
-Yeah, I know you want a binary, I will package this thing, shut up for now.
+Yeah, I know you want a binary, I will package this thing, bear it for now.
 
 Authenticate yourself:
 
