@@ -59,7 +59,7 @@ logging.getLogger('urllib3.connectionpool').setLevel(logging.INFO)
 
 def edit_card(card_to_edit: TrlCard = None) -> (str, str):
     """
-    :param card_to_edit: 
+    :param card_to_edit:
     :return: a Tuple with the new name and description of the card
     """
     tempfile_suffix = 'newcard'
@@ -86,7 +86,8 @@ if __name__ == '__main__':
 
     tclient = TClient()
 
-    selected_board_filepath = '/tmp/.trullo-selected-board'
+    tmpdir = tempfile.gettempdir()
+    selected_board_filepath = f'{tmpdir}/.trullo-selected-board'
     if os.path.exists(selected_board_filepath):
         with open(selected_board_filepath, 'r') as fh:
             selected_board_id, selected_board_name = fh.readline().split(' ', 1)
