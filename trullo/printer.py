@@ -35,6 +35,19 @@ class Printer:
         print()
 
     @staticmethod
+    def print_board_lists(board: TrlBoard):
+        symbol_count_lists = Shortener.get_min_symbols_to_uniq([list_.id for list_ in board.lists], True)
+        print(f"{board.raw_data['shortUrl']}")
+        print('------------------------------')
+        print(f"{board.raw_data['name']}")
+        print()
+        if board.lists is not None:
+            for list_ in board.lists:
+                print(
+                    f"[{list_.id[len(list_.id) - symbol_count_lists:len(list_.id)].lower()}] {list_.raw_data['name']}")
+        print()
+
+    @staticmethod
     def print_card(card: TrlCard):
         d = card.raw_data
         formatted_desc = '\t' + str(d['desc']).replace('\n', '\n\t')

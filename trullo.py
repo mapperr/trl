@@ -3,6 +3,7 @@
 usage:
     trl b [<board_shortcut>]
     trl l [<list_shortcut>]
+    trl ll
     trl c <card_shortcut> [o | m <list_shortcut> | e | n <list_shortcut>]
     trl c n <list_shortcut>
     trl g <api_path>
@@ -17,8 +18,11 @@ commands:
         with board_shortcut you can select the board you want to work with
 
     l [<list_shortcut>]
-        shows the board you have currently selected
-        with list_shortcut you can show a single list
+        shows lists and cards in the board you have currently selected
+        with list_shortcut you can show cards a single list
+
+    ll
+        shows only the board's lists
 
     c <card_shortcut> [o | m <list_shortcut> | e]
         shows the card infos
@@ -116,6 +120,10 @@ if __name__ == '__main__':
     if not args['b'] and not os.path.exists(selected_board_filepath):
         print(f'first select a board with `trl b`')
         exit(1)
+
+    if args['ll']:
+        board = tclient.get_board(selected_board_id)
+        Printer.print_board_lists(board)
 
     if args['l']:
         board = tclient.get_board(selected_board_id)

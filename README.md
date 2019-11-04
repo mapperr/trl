@@ -30,8 +30,11 @@ Here is the usage (check `trl -h` too):
         with board_shortcut you can select the board you want to work with
 
     trl l [<list_shortcut>]
-        shows the board you have currently selected
-        with list_shortcut you can show a single list
+        shows lists and cards in the board you have currently selected
+        with list_shortcut you can show cards a single list
+
+    trl ll
+        shows only the board's lists
 
     trl c <card_shortcut> [o | m <list_shortcut> | e]
         shows the card infos
