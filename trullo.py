@@ -87,7 +87,7 @@ if __name__ == '__main__':
     tclient = TClient()
 
     tmpdir = tempfile.gettempdir()
-    selected_board_filepath = f'{tmpdir}/.trullo-selected-board'
+    selected_board_filepath = f'{tmpdir}/.trl-selected-board'
     if os.path.exists(selected_board_filepath):
         with open(selected_board_filepath, 'r') as fh:
             selected_board_id, selected_board_name = fh.readline().split(' ', 1)
