@@ -50,6 +50,7 @@ import os
 import pprint
 import subprocess
 import tempfile
+import urllib
 
 from docopt import docopt
 
@@ -57,8 +58,11 @@ from trullo.printer import Printer
 from trullo.tclient import TClient
 from trullo.trl_card import TrlCard
 
-logging.basicConfig(level=logging.DEBUG)
+# logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 logging.getLogger('urllib3.connectionpool').setLevel(logging.INFO)
+
+logger = logging.getLogger(__name__)
 
 
 def edit_card(card_to_edit: TrlCard = None) -> (str, str):
@@ -82,7 +86,8 @@ def edit_card(card_to_edit: TrlCard = None) -> (str, str):
     subprocess.Popen([os.environ.get('EDITOR'), tmpfile_path]).wait()
     with open(tmpfile_path, 'r') as fd:
         lines = fd.readlines()
-    return lines[1].replace('\n', ''), str.join('', lines[2:])
+    return urllib.parse.quote(lines[1].replace('\n', ''), safe=''), \
+        urllib.parse.quote(str.join('', lines[2:]), safe='')
 
 
 if __name__ == '__main__':
@@ -157,6 +162,7 @@ if __name__ == '__main__':
                 tclient.move_card(card.id, list_id)
             elif edit_command:
                 card_new_name, card_new_desc = edit_card(card)
+                logger.debug(card_new_desc)
                 tclient.edit_card(card.id, card_new_name, card_new_desc)
             else:
                 Printer.print_card(card)
