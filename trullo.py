@@ -66,11 +66,11 @@ def edit_card(card_to_edit: TrlCard = None) -> (str, str):
     :param card_to_edit:
     :return: a Tuple with the new name and description of the card
     """
-    tempfile_suffix = 'newcard'
+    tempfile_suffix = 'newcard.md'
     clean_card_name = 'New Card Title'
     card_description = 'New Card Description'
     if card_to_edit is not None:
-        tempfile_suffix = card.id
+        tempfile_suffix = f'{card.id}.md'
         clean_card_name = str(card_to_edit.raw_data['name']).replace('\n', '')
         card_description = card_to_edit.raw_data['desc']
 
