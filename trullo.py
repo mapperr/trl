@@ -74,7 +74,7 @@ def edit_card(card_to_edit: TrlCard = None) -> (str, str):
         clean_card_name = str(card_to_edit.raw_data['name']).replace('\n', '')
         card_description = card_to_edit.raw_data['desc']
 
-    tmpfile_path = f'{tempfile.gettempdir()}/trl-{tempfile_suffix}'
+    tmpfile_path = f'{tempfile.gettempdir()}/.trl-{tempfile_suffix}'
     with open(tmpfile_path, 'w') as fd:
         fd.writelines(
             f"# The line below is the card title, lines after that are the card description\n"
