@@ -19,7 +19,7 @@ commands:
 
     l [<list_shortcut>]
         shows lists and cards in the board you have currently selected
-        with list_shortcut you can show cards a single list
+        with list_shortcut you can show cards of a single list
 
     ll
         shows only the board's lists

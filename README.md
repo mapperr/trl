@@ -5,7 +5,11 @@ A dumb trello cli with shortcuts.
 
 ## Setup
 
-Get the repo and run `pipenv install` in it.
+Get the repo and run `pipenv install` in it
+
+You don't have pipenv installed? Shame on you.\
+[Here](https://pipenv.readthedocs.io/en/latest/install/#pragmatic-installation-of-pipenv)
+is how to get it)
 
 Yeah, I know you want a binary, I will package this thing, bear it for now.
 
@@ -31,7 +35,7 @@ Here is the usage (check `trl -h` too):
 
     trl l [<list_shortcut>]
         shows lists and cards in the board you have currently selected
-        with list_shortcut you can show cards a single list
+        with list_shortcut you can show cards of a single list
 
     trl ll
         shows only the board's lists
