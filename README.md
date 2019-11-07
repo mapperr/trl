@@ -8,8 +8,8 @@ A dumb trello cli with shortcuts.
 Get the repo and run `pipenv install` in it
 
 You don't have pipenv installed? Shame on you.\
-[Here](https://pipenv.readthedocs.io/en/latest/install/#pragmatic-installation-of-pipenv)
-is how to get it)
+([Here](https://pipenv.readthedocs.io/en/latest/install/#pragmatic-installation-of-pipenv)
+is how to can get it, but usually is a `pip install --user pipenv`)
 
 Yeah, I know you want a binary, I will package this thing, bear it for now.
 
