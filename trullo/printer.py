@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 import attr
 
@@ -21,7 +21,15 @@ class Printer:
                 f"{board.raw_data['name']}")
 
     @staticmethod
-    def print_board(board: TrlBoard, list_shortcut: str = None):
+    def there_is_a_match(normalized_name: str, shortcuts: List[str]) -> bool:
+        return len([
+            shortcut for shortcut in shortcuts
+            if normalized_name.startswith(shortcut)
+        ]) > 0
+
+    @staticmethod
+    def print_board(board: TrlBoard,
+                    list_shortcuts: Optional[List[str]] = None):
         cards_names = [card.get_normalized_name() for card in board.cards]
         board_lists_names = \
             [list_.get_normalized_name() for list_ in board.lists]
@@ -35,11 +43,14 @@ class Printer:
         print(f"{board.raw_data['name']}")
         print()
         if board.lists is not None:
-            for list_ in board.lists:
-                if list_shortcut is not None \
-                        and not \
-                        list_.get_normalized_name().startswith(list_shortcut):
-                    continue
+            matching_lists = board.lists
+            if list_shortcuts is not None and len(list_shortcuts) > 0:
+                matching_lists = [
+                    list_ for list_ in board.lists
+                    if Printer.there_is_a_match(list_.get_normalized_name(),
+                                                list_shortcuts)
+                ]
+            for list_ in matching_lists:
                 shortcut = \
                     list_.get_normalized_name()[0:symbol_count_lists].lower()
                 print(f"[{shortcut}] {list_.raw_data['name']}")

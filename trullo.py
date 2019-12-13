@@ -2,7 +2,7 @@
 
 usage:
     trl b [<board_shortcut>]
-    trl l [<list_shortcut>]
+    trl l [<list_shortcuts>...]
     trl ll
     trl c <card_shortcut> [o | m <list_shortcut> | e | n <list_shortcut>]
     trl c n <list_shortcut>
@@ -143,9 +143,9 @@ if __name__ == '__main__':
 
     if args['l']:
         board = tclient.get_board(selected_board_id)
-        list_shortcut = args['<list_shortcut>']
-        if list_shortcut:
-            Printer.print_board(board, list_shortcut)
+        list_shortcuts = args['<list_shortcuts>']
+        if list_shortcuts is not None and len(list_shortcuts) > 0:
+            Printer.print_board(board, list_shortcuts)
         else:
             Printer.print_board(board)
 
