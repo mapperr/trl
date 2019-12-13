@@ -6,17 +6,29 @@ import attr
 @attr.s(auto_attribs=True)
 class Shortener:
     @staticmethod
-    def get_min_symbols_to_uniq(strings: List[str], end: bool = False) -> int:
+    def normalize(string: str) -> str:
+        result = ''
+        for char in string:
+            if char.lower() not in 'qwertyuiopasdfghjklzxcvbnm1234567890':
+                continue
+            result += char.lower()
+        return result
+
+    @staticmethod
+    def get_min_symbols_to_uniq(strings: List[str]) -> int:
         symbol_counter = 1
         longest_item_length = Shortener.get_longest_item_length(strings)
-        if end:
-            while symbol_counter < longest_item_length \
-                    and Shortener.are_there_duplicates([el[len(el)-symbol_counter:len(el)].lower() for el in strings]):
-                symbol_counter += 1
-        else:
-            while symbol_counter < longest_item_length \
-                    and Shortener.are_there_duplicates([el[0:symbol_counter].lower() for el in strings]):
-                symbol_counter += 1
+        string_list = [
+            string_item[0:symbol_counter].lower()
+            for string_item in strings
+        ]
+        while symbol_counter < longest_item_length \
+                and Shortener.are_there_duplicates(string_list):
+            symbol_counter += 1
+            string_list = [
+                string_item[0:symbol_counter].lower()
+                for string_item in strings
+            ]
         return symbol_counter
 
     @staticmethod

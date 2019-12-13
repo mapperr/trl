@@ -14,8 +14,10 @@ logger = logging.getLogger(__name__)
 
 @attr.s(auto_attribs=True)
 class TClient:
-    trello_token: str = attr.ib(default=os.environ['TRELLO_TOKEN'] if 'TRELLO_TOKEN' in os.environ else '')
-    trello_api_key: str = attr.ib(default=os.environ['TRELLO_API_KEY'] if 'TRELLO_API_KEY' in os.environ else '')
+    trello_token: str = attr.ib(default=os.environ[
+        'TRELLO_TOKEN'] if 'TRELLO_TOKEN' in os.environ else '')
+    trello_api_key: str = attr.ib(default=os.environ[
+        'TRELLO_API_KEY'] if 'TRELLO_API_KEY' in os.environ else '')
     base_url: str = attr.ib(default='https://api.trello.com/1')
 
     def build_auth_params(self) -> Dict[str, str]:
@@ -26,13 +28,16 @@ class TClient:
         return res.json()
 
     def get(self, path: str) -> Dict:
-        return self.handle_res(requests.get(self.base_url + path, self.build_auth_params()))
+        return self.handle_res(
+            requests.get(self.base_url + path, self.build_auth_params()))
 
     def post(self, path: str) -> Dict:
-        return self.handle_res(requests.post(self.base_url + path, self.build_auth_params()))
+        return self.handle_res(
+            requests.post(self.base_url + path, self.build_auth_params()))
 
     def put(self, path: str) -> Dict:
-        return self.handle_res(requests.put(self.base_url + path, self.build_auth_params()))
+        return self.handle_res(
+            requests.put(self.base_url + path, self.build_auth_params()))
 
     def get_boards(self) -> List[TrlBoard]:
         res = self.get('/members/me/boards?lists=open')
@@ -49,11 +54,15 @@ class TClient:
                 if k == 'lists':
                     lists = self._extract_lists(v)
             if not board_closed:
-                boards.append(TrlBoard(board_id, raw_board['shortLink'], lists, [], raw_board))
+                boards.append(
+                    TrlBoard(board_id, raw_board['shortLink'], lists, [],
+                             raw_board))
         return boards
 
     def get_board(self, board_id: str) -> TrlBoard:
-        res = self.get(f'/batch?urls=/board/{board_id},/board/{board_id}/lists/open,/board/{board_id}/cards/open')
+        res = self.get(f'/batch?urls=/board/{board_id},'
+                       f'/board/{board_id}/lists/open,'
+                       f'/board/{board_id}/cards/open')
         board = TrlBoard(board_id, board_id, [], [], res[0]['200'])
         for item in res[1]['200']:
             list_ = TrlList(item['id'], item)

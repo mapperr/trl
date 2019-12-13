@@ -87,7 +87,7 @@ def edit_card(card_to_edit: TrlCard = None) -> (str, str):
     with open(tmpfile_path, 'r') as fd:
         lines = fd.readlines()
     return urllib.parse.quote(lines[1].replace('\n', ''), safe=''), \
-        urllib.parse.quote(str.join('', lines[2:]), safe='')
+           urllib.parse.quote(str.join('', lines[2:]), safe='')
 
 
 if __name__ == '__main__':
@@ -99,7 +99,8 @@ if __name__ == '__main__':
     selected_board_filepath = f'{tmpdir}/.trl-selected-board'
     if os.path.exists(selected_board_filepath):
         with open(selected_board_filepath, 'r') as fh:
-            selected_board_id, selected_board_name = fh.readline().split(' ', 1)
+            selected_board_id, selected_board_name = fh.readline().split(
+                ' ', 1)
 
     if args['g']:
         api_path = args['<api_path>']
@@ -109,8 +110,18 @@ if __name__ == '__main__':
     if args['b']:
         boards = tclient.get_boards()
         if args['<board_shortcut>']:
-            board = [board for board in boards
-                     if board.shortcut.lower().startswith(args['<board_shortcut>'])][0]
+            board_shortcut = args['<board_shortcut>']
+            matching_boards = [board for board in boards
+                               if board.get_normalized_name()
+                                   .startswith(board_shortcut)]
+            if len(matching_boards) > 1:
+                matching_names = \
+                    [board.get_normalized_name() for board in matching_boards]
+                print(
+                    f'shortcut [{board_shortcut}] matches more than one board: '
+                    f'{matching_names}')
+                exit(1)
+            board = matching_boards[0]
             print(f'selected board {board.raw_data["name"]}')
             with open(selected_board_filepath, 'w') as fh:
                 fh.write(f'{board.id} {board.raw_data["name"]}')
@@ -143,13 +154,41 @@ if __name__ == '__main__':
         new_command = args['n']
         if new_command:
             target_list_shortcut = args['<list_shortcut>']
-            list_id = [list_.id for list_ in board.lists if list_.id.lower().endswith(target_list_shortcut)][0]
+            matching_lists = [list_ for list_ in board.lists if
+                              list_.get_normalized_name().startswith(
+                                  target_list_shortcut)]
+            if len(matching_lists) > 1:
+                matching_names = \
+                    [list_.get_normalized_name() for list_ in matching_lists]
+                print(
+                    f'shortcut [{target_list_shortcut}] '
+                    f'matches more than one list: '
+                    f'{matching_names}')
+                exit(1)
+            list_id = matching_lists[0].id
+
             new_card_name, new_card_desc = edit_card()
             tclient.new_card(list_id, new_card_name, new_card_desc)
         else:
             card_shortcut = args['<card_shortcut>']
-            card = tclient.get_card(
-                [card.id for card in board.cards if card.shortcut.lower().startswith(card_shortcut)][0])
+            matching_cards = [
+                card
+                for card in board.cards
+                if card.get_normalized_name().startswith(card_shortcut)
+            ]
+
+            if len(matching_cards) > 1:
+                matching_names = \
+                    [matching_card.get_normalized_name()
+                     for matching_card in matching_cards]
+                print(
+                    f'shortcut [{card_shortcut}] '
+                    f'matches more than one card: '
+                    f'{matching_names}')
+                exit(1)
+
+            selected_card = matching_cards[0]
+            card = tclient.get_card(selected_card.id)
 
             open_command = args['o']
             move_command = args['m']
@@ -158,7 +197,21 @@ if __name__ == '__main__':
                 subprocess.Popen(['xdg-open', card.raw_data['shortUrl']])
             elif move_command:
                 target_list_shortcut = args['<list_shortcut>']
-                list_id = [list_.id for list_ in board.lists if list_.id.lower().endswith(target_list_shortcut)][0]
+
+                matching_lists = [list_ for list_ in board.lists if
+                                  list_.get_normalized_name().startswith(
+                                      target_list_shortcut)]
+                if len(matching_lists) > 1:
+                    matching_names = \
+                        [list_.get_normalized_name() for list_ in
+                         matching_lists]
+                    print(
+                        f'shortcut [{target_list_shortcut}] '
+                        f'matches more than one list: '
+                        f'{matching_names}')
+                    exit(1)
+                list_id = matching_lists[0].id
+
                 tclient.move_card(card.id, list_id)
             elif edit_command:
                 card_new_name, card_new_desc = edit_card(card)
