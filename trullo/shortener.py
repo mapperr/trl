@@ -1,6 +1,9 @@
 from typing import List
+from typing import Set
 
 import attr
+
+from trullo.shortcuttable import Shortcuttable
 
 
 @attr.s(auto_attribs=True)
@@ -32,8 +35,8 @@ class Shortener:
         return symbol_counter
 
     @staticmethod
-    def are_there_duplicates(list_):
-        set_ = set()
+    def are_there_duplicates(list_: List[str]):
+        set_: Set[str] = set()
         for elem in list_:
             if elem in set_:
                 return True
@@ -43,9 +46,16 @@ class Shortener:
 
     @staticmethod
     def get_longest_item_length(list_: List[str]) -> int:
-        longest = 0
+        longest_length = 0
         for string in list_:
             length = len(string)
-            if length > longest:
-                longest = length
-        return longest
+            if length > longest_length:
+                longest_length = length
+        return longest_length
+
+    @staticmethod
+    def get_matches(shortcut: str,
+                    shortcuttables: List[Shortcuttable]) \
+            -> List[any]:
+        return [shortcuttable for shortcuttable in shortcuttables
+                if shortcut in shortcuttable.get_normalized_name()]

@@ -2,13 +2,14 @@ from typing import Dict, List
 
 import attr
 
+from trullo.shortcuttable import Shortcuttable
 from trullo.shortener import Shortener
 from trullo.trl_list import TrlList
 from trullo.trl_card import TrlCard
 
 
 @attr.s(auto_attribs=True)
-class TrlBoard:
+class TrlBoard(Shortcuttable):
     id: str
     short_link: str
     lists: List[TrlList]

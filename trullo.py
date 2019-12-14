@@ -51,14 +51,18 @@ import pprint
 import subprocess
 import tempfile
 import urllib
+from typing import List
 
 from docopt import docopt
 
 from trullo.printer import Printer
+from trullo.shortener import Shortener
 from trullo.tclient import TClient
+from trullo.trl_board import TrlBoard
 from trullo.trl_card import TrlCard
-
 # logging.basicConfig(level=logging.DEBUG)
+from trullo.trl_list import TrlList
+
 logging.basicConfig(level=logging.INFO)
 logging.getLogger('urllib3.connectionpool').setLevel(logging.INFO)
 
@@ -81,7 +85,8 @@ def edit_card(card_to_edit: TrlCard = None) -> (str, str):
     tmpfile_path = f'{tempfile.gettempdir()}/.trl-{tempfile_suffix}'
     with open(tmpfile_path, 'w') as fd:
         fd.writelines(
-            f"# The line below is the card title, lines after that are the card description\n"
+            f"# The line below is the card title, "
+            f"lines after that are the card description\n"
             f"{clean_card_name}\n{card_description}")
     subprocess.Popen([os.environ.get('EDITOR'), tmpfile_path]).wait()
     with open(tmpfile_path, 'r') as fd:
@@ -111,9 +116,10 @@ if __name__ == '__main__':
         boards = tclient.get_boards()
         if args['<board_shortcut>']:
             board_shortcut = args['<board_shortcut>']
-            matching_boards = [board for board in boards
-                               if board.get_normalized_name()
-                                   .startswith(board_shortcut)]
+            matching_boards: List[TrlBoard] = Shortener.get_matches(
+                board_shortcut,
+                boards
+            )
             if len(matching_boards) > 1:
                 matching_names = \
                     [board.get_normalized_name() for board in matching_boards]
@@ -154,9 +160,10 @@ if __name__ == '__main__':
         new_command = args['n']
         if new_command:
             target_list_shortcut = args['<list_shortcut>']
-            matching_lists = [list_ for list_ in board.lists if
-                              list_.get_normalized_name().startswith(
-                                  target_list_shortcut)]
+            matching_lists: List[TrlList] = Shortener.get_matches(
+                target_list_shortcut,
+                board.lists
+            )
             if len(matching_lists) > 1:
                 matching_names = \
                     [list_.get_normalized_name() for list_ in matching_lists]
@@ -171,11 +178,10 @@ if __name__ == '__main__':
             tclient.new_card(list_id, new_card_name, new_card_desc)
         else:
             card_shortcut = args['<card_shortcut>']
-            matching_cards = [
-                card
-                for card in board.cards
-                if card.get_normalized_name().startswith(card_shortcut)
-            ]
+            matching_cards: List[TrlCard] = Shortener.get_matches(
+                card_shortcut,
+                board.cards
+            )
 
             if len(matching_cards) > 1:
                 matching_names = \
@@ -197,10 +203,10 @@ if __name__ == '__main__':
                 subprocess.Popen(['xdg-open', card.raw_data['shortUrl']])
             elif move_command:
                 target_list_shortcut = args['<list_shortcut>']
-
-                matching_lists = [list_ for list_ in board.lists if
-                                  list_.get_normalized_name().startswith(
-                                      target_list_shortcut)]
+                matching_lists: List[TrlList] = Shortener.get_matches(
+                    target_list_shortcut,
+                    board.lists
+                )
                 if len(matching_lists) > 1:
                     matching_names = \
                         [list_.get_normalized_name() for list_ in
