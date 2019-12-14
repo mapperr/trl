@@ -13,4 +13,6 @@ class TrlCard(Shortcuttable):
     raw_data: Dict
 
     def get_normalized_name(self):
-        return Shortener.normalize(self.raw_data['name'])
+        return Shortener.normalize(
+            f"{self.raw_data['name']}{self.raw_data['shortLink']}"
+        )

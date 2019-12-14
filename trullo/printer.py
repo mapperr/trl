@@ -12,7 +12,8 @@ class Printer:
     @staticmethod
     def print_boards(boards: List[TrlBoard]):
         for board in boards:
-            print(f"- {board.raw_data['name']}")
+            print(f"[{board.raw_data['shortLink'].lower()}] "
+                  f"{board.raw_data['name']}")
 
     @staticmethod
     def print_board(board: TrlBoard,
@@ -31,10 +32,12 @@ class Printer:
                         list_shortcuts)
                 ]
             for list_ in matching_lists:
-                print(f"{list_.raw_data['name']}")
+                print(f"\n{list_.raw_data['name']}\n"
+                      f"[{list_.raw_data['id'].lower()}]")
                 for card in board.cards:
                     if card.raw_data['idList'] == list_.id:
-                        print(f"\t- {card.raw_data['name']}")
+                        print(f"\t[{card.raw_data['shortLink'].lower()}] "
+                              f"{card.raw_data['name']}")
         print()
 
     @staticmethod
@@ -47,7 +50,8 @@ class Printer:
         print()
         if board.lists is not None:
             for list_ in board.lists:
-                print(f"- {list_.raw_data['name']}")
+                print(f"[{list_.raw_data['id'].lower()}] "
+                      f"{list_.raw_data['name']}")
         print()
 
     @staticmethod
@@ -73,5 +77,5 @@ class Printer:
     def _there_is_a_match(normalized_name: str, shortcuts: List[str]) -> bool:
         return len([
             shortcut for shortcut in shortcuts
-            if normalized_name.startswith(shortcut)
+            if Shortener.is_a_match(shortcut, normalized_name)
         ]) > 0

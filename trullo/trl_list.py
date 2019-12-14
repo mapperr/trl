@@ -12,4 +12,6 @@ class TrlList(Shortcuttable):
     raw_data: Dict
 
     def get_normalized_name(self) -> str:
-        return Shortener.normalize(self.raw_data['name'])
+        return Shortener.normalize(
+            f"{self.raw_data['name']}{self.id}"
+        )

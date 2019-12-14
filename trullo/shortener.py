@@ -54,8 +54,14 @@ class Shortener:
         return longest_length
 
     @staticmethod
-    def get_matches(shortcut: str,
-                    shortcuttables: List[Shortcuttable]) \
-            -> List[any]:
+    def get_matches(
+            shortcut: str,
+            shortcuttables: List[Shortcuttable]) -> List[any]:
         return [shortcuttable for shortcuttable in shortcuttables
-                if shortcut in shortcuttable.get_normalized_name()]
+                if Shortener.is_a_match(
+                shortcut, shortcuttable.get_normalized_name())
+                ]
+
+    @staticmethod
+    def is_a_match(shortcut: str, normalized_name: str) -> bool:
+        return shortcut in normalized_name
