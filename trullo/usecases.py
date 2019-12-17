@@ -24,7 +24,7 @@ class Usecases:
     selected_board_id: Optional[str] = attr.ib(default=None)
     selected_board_name: Optional[str] = attr.ib(default=None)
 
-    def get_selected_board(self) -> Optional[Tuple[str, str]]:
+    def get_selected_board(self) -> Tuple[Optional[str], Optional[str]]:
         if os.path.exists(self.tconfig.selected_board_filepath):
             with open(self.tconfig.selected_board_filepath, 'r') as fh:
                 selected_board_id, selected_board_name = \
@@ -32,6 +32,7 @@ class Usecases:
                 self.selected_board_id = selected_board_id
                 self.selected_board_name = selected_board_name
                 return selected_board_id, selected_board_name
+        return None, None
 
     def print_board_list(self):
         boards = self.tclient.get_boards()
