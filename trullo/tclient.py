@@ -7,6 +7,7 @@ import requests
 
 from trullo.trl_board import TrlBoard
 from trullo.trl_card import TrlCard
+from trullo.trl_label import TrlLabel
 from trullo.trl_list import TrlList
 
 logger = logging.getLogger(__name__)
@@ -61,13 +62,20 @@ class TClient:
 
     def get_board(self, board_id: str) -> TrlBoard:
         res = self.get(f'/batch?urls=/board/{board_id},'
+                       f'/board/{board_id}/labels,'
                        f'/board/{board_id}/lists/open,'
                        f'/board/{board_id}/cards/open')
-        board = TrlBoard(board_id, board_id, [], [], res[0]['200'])
+        board = TrlBoard(board_id, board_id, [], [], [], res[0]['200'])
         for item in res[1]['200']:
+            label = TrlLabel(item['id'],
+                             item['name'],
+                             item,
+                             item['color'] if 'color' in item else None)
+            board.labels.append(label)
+        for item in res[2]['200']:
             list_ = TrlList(item['id'], item)
             board.lists.append(list_)
-        for item in res[2]['200']:
+        for item in res[3]['200']:
             card = TrlCard(item['id'], item['shortLink'], item)
             board.cards.append(card)
         return board

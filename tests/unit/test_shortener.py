@@ -3,16 +3,17 @@ from typing import List
 from unittest import mock
 from unittest.mock import Mock
 
+from trullo.normalizer import Normalizer
 from trullo.shortcuttable import Shortcuttable
-from trullo.shortener import Shortener
 from trullo.trl_board import TrlBoard
 from trullo.trl_card import TrlCard
+from trullo.trl_label import TrlLabel
 from trullo.trl_list import TrlList
 
 
 class TestShortener(unittest.TestCase):
     def test_matches(self):
-        sh = Shortener
+        sh = Normalizer
         start_match = sh.is_a_match('pil', 'pillow')
         self.assertTrue(start_match)
         middle_match = sh.is_a_match('grat', 'integration')
@@ -21,7 +22,7 @@ class TestShortener(unittest.TestCase):
         self.assertTrue(end_match)
 
     def test_wrong_matches(self):
-        sh = Shortener
+        sh = Normalizer
         match = sh.is_a_match('spil', 'pillow')
         self.assertFalse(match)
 
@@ -39,7 +40,7 @@ class TestShortener(unittest.TestCase):
             mock.create_autospec(Shortcuttable, spec_set=True)
         short4.get_normalized_name = Mock(return_value='')
 
-        sh = Shortener
+        sh = Normalizer
         shorties = [short1, short2]
         matches: List = sh.get_matches('er', shorties)
         self.assertEqual(1, len(matches))
@@ -63,8 +64,10 @@ class TestShortener(unittest.TestCase):
                         {'name': ' Implement a trim() function',
                          'shortLink': shortLink})
         list1 = TrlList('idl1', {'name': 'To Do'})
+        label1 = TrlLabel('idlb1', lblname := 'feature',
+                          {'name': lblname, 'color': 'blue'}, 'blue')
         board1 = TrlBoard('idb1', shortLink := 'p01UyT', [list1],
-                          [card1, card2, card3],
+                          [card1, card2, card3], [label1],
                           {'name': 'my Super Board',
                            'shortLink': shortLink})
 
@@ -103,4 +106,3 @@ class TestShortener(unittest.TestCase):
         self.assertNotIn('U', board1_n)
         self.assertIn('mysuper', board1_n)
         self.assertIn('p01u', board1_n)
-

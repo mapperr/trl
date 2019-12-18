@@ -6,8 +6,8 @@ from typing import Optional, Tuple, List
 
 import attr
 
+from trullo.normalizer import Normalizer
 from trullo.printer import Printer
-from trullo.shortener import Shortener
 from trullo.tclient import TClient
 from trullo.tconfig import TConfig
 from trullo.trl_board import TrlBoard
@@ -19,7 +19,7 @@ from trullo.trl_list import TrlList
 class Usecases:
     tconfig: TConfig
     tclient: TClient
-    shortener: Shortener
+    shortener: Normalizer
     printer: Printer
     selected_board_id: Optional[str] = attr.ib(default=None)
     selected_board_name: Optional[str] = attr.ib(default=None)
@@ -84,7 +84,7 @@ class Usecases:
 
     def create_card(self, target_list_shortcut: str):
         board = self.tclient.get_board(self.selected_board_id)
-        matching_lists: List[TrlList] = Shortener.get_matches(
+        matching_lists: List[TrlList] = Normalizer.get_matches(
             target_list_shortcut,
             board.lists
         )
@@ -115,7 +115,7 @@ class Usecases:
 
     def move_card(self, card_shortcut: str, target_list_shortcut: str):
         board = self.tclient.get_board(self.selected_board_id)
-        matching_lists: List[TrlList] = Shortener.get_matches(
+        matching_lists: List[TrlList] = Normalizer.get_matches(
             target_list_shortcut,
             board.lists
         )
@@ -143,7 +143,7 @@ class Usecases:
 
     def _get_card(self, card_shortcut):
         board = self.tclient.get_board(self.selected_board_id)
-        matching_cards: List[TrlCard] = Shortener.get_matches(
+        matching_cards: List[TrlCard] = Normalizer.get_matches(
             card_shortcut,
             board.cards
         )
@@ -192,3 +192,8 @@ class Usecases:
             lines = fd.readlines()
         return urllib.parse.quote(lines[1].replace('\n', ''), safe=''), \
                urllib.parse.quote(str.join('', lines[2:]), safe='')
+
+    def print_board_labels(self):
+        board = self.tclient.get_board(self.selected_board_id)
+        for label in board.labels:
+            print('{:12} {}'.format(label.color, label.name))

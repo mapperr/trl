@@ -2,7 +2,7 @@ from typing import List, Optional
 
 import attr
 
-from trullo.shortener import Shortener
+from trullo.normalizer import Normalizer
 from trullo.trl_board import TrlBoard
 from trullo.trl_card import TrlCard
 
@@ -36,17 +36,16 @@ class Printer:
                       f"[{list_.raw_data['id'].lower()}]")
                 for card in board.cards:
                     if card.raw_data['idList'] == list_.id:
-                        card_output = f"\t[{card.raw_data['shortLink'].lower()}] "
+                        card_output = \
+                            f"\n\t{card.raw_data['name']}" \
+                            f"\n\t[{card.raw_data['shortLink'].lower()}] "
                         for raw_label in card.raw_data['labels']:
                             card_output += f'({raw_label["name"]}) '
-                        card_output += f"{card.raw_data['name']}"
                         print(card_output)
         print()
 
     @staticmethod
     def print_board_lists(board: TrlBoard):
-        symbol_count_lists = Shortener.get_min_symbols_to_uniq(
-            [list_.get_normalized_name() for list_ in board.lists])
         print(f"{board.raw_data['shortUrl']}")
         print('------------------------------')
         print(f"{board.raw_data['name']}")
@@ -80,5 +79,5 @@ class Printer:
     def _there_is_a_match(normalized_name: str, shortcuts: List[str]) -> bool:
         return len([
             shortcut for shortcut in shortcuts
-            if Shortener.is_a_match(shortcut, normalized_name)
+            if Normalizer.is_a_match(shortcut, normalized_name)
         ]) > 0

@@ -5,6 +5,7 @@ usage:
     trl b [<board_shortcut>]
     trl l [<list_shortcuts>...]
     trl ll
+    trl lb
     trl c <card_shortcut> [o | m <list_shortcut> | e | n <list_shortcut>]
     trl c n <list_shortcut>
     trl g <api_path>
@@ -59,7 +60,7 @@ import tempfile
 from docopt import docopt
 
 from trullo.printer import Printer
-from trullo.shortener import Shortener
+from trullo.normalizer import Normalizer
 from trullo.tclient import TClient
 from trullo.tconfig import TConfig
 from trullo.usecases import Usecases
@@ -79,7 +80,7 @@ if __name__ == '__main__':
 
     usecases = Usecases(TConfig(selected_board_filepath),
                         TClient(),
-                        Shortener(),
+                        Normalizer(),
                         Printer())
 
     selected_board_id, selected_board_name = usecases.get_selected_board()
@@ -106,6 +107,9 @@ if __name__ == '__main__':
 
     elif args['ll']:
         usecases.print_board_lists()
+
+    elif args['lb']:
+        usecases.print_board_labels()
 
     elif args['l']:
         list_shortcuts = args['<list_shortcuts>']

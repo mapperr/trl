@@ -2,9 +2,10 @@ from typing import Dict, List
 
 import attr
 
+from trullo.normalizer import Normalizer
 from trullo.shortcuttable import Shortcuttable
-from trullo.shortener import Shortener
 from trullo.trl_card import TrlCard
+from trullo.trl_label import TrlLabel
 from trullo.trl_list import TrlList
 
 
@@ -14,9 +15,10 @@ class TrlBoard(Shortcuttable):
     short_link: str
     lists: List[TrlList]
     cards: List[TrlCard]
+    labels: List[TrlLabel]
     raw_data: Dict
 
     def get_normalized_name(self) -> str:
-        return Shortener.normalize(
+        return Normalizer.normalize(
             f"{self.raw_data['name']}{self.raw_data['shortLink']}"
         )
