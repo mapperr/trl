@@ -34,6 +34,9 @@ class Usecases:
                 return selected_board_id, selected_board_name
         return None, None
 
+    def open_trello_in_browser(self):
+        subprocess.Popen(['xdg-open', 'https://trello.com'])
+
     def print_board_list(self):
         boards = self.tclient.get_boards()
         self.printer.print_boards(boards)

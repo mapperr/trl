@@ -1,6 +1,7 @@
 """Trullo
 
 usage:
+    trl o
     trl b [<board_shortcut>]
     trl l [<list_shortcuts>...]
     trl ll
@@ -13,6 +14,9 @@ usage:
 
 
 commands:
+    o
+        open trello in your browser
+
     b [<board_shortcut>]
         shows the boards you can access
         with board_shortcut you can select the board you want to work with
@@ -44,6 +48,9 @@ env:
 
     you can obtain those values here: https://trello.com/app-key
 
+
+trello development board: https://trello.com/b/fuK3ff2z
+
 """
 import logging
 import pprint
@@ -55,7 +62,6 @@ from trullo.printer import Printer
 from trullo.shortener import Shortener
 from trullo.tclient import TClient
 from trullo.tconfig import TConfig
-# logging.basicConfig(level=logging.DEBUG)
 from trullo.usecases import Usecases
 
 logging.basicConfig(level=logging.INFO)
@@ -83,26 +89,29 @@ if __name__ == '__main__':
         pp = pprint.PrettyPrinter(indent=4)
         pp.pprint(tclient.get(api_path))
 
-    if args['b']:
+    elif args['o']:
+        usecases.open_trello_in_browser()
+
+    elif args['b']:
         if args['<board_shortcut>']:
             board_shortcut = args['<board_shortcut>']
             usecases.select_board(board_shortcut)
         else:
             usecases.print_board_list()
 
-    # stuff that works only if a board is selected
-    if not args['b'] and selected_board_name is None:
+    # below are stuffs that works only if a board is selected
+    elif not args['b'] and selected_board_name is None:
         print(f'first select a board with `trl b`')
         exit(1)
 
-    if args['ll']:
+    elif args['ll']:
         usecases.print_board_lists()
 
-    if args['l']:
+    elif args['l']:
         list_shortcuts = args['<list_shortcuts>']
         usecases.print_lists(list_shortcuts)
 
-    if args['c']:
+    elif args['c']:
         new_command = args['n']
         if new_command:
             target_list_shortcut = args['<list_shortcut>']

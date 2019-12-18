@@ -36,8 +36,11 @@ class Printer:
                       f"[{list_.raw_data['id'].lower()}]")
                 for card in board.cards:
                     if card.raw_data['idList'] == list_.id:
-                        print(f"\t[{card.raw_data['shortLink'].lower()}] "
-                              f"{card.raw_data['name']}")
+                        card_output = f"\t[{card.raw_data['shortLink'].lower()}] "
+                        for raw_label in card.raw_data['labels']:
+                            card_output += f'({raw_label["name"]}) '
+                        card_output += f"{card.raw_data['name']}"
+                        print(card_output)
         print()
 
     @staticmethod
