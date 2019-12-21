@@ -56,7 +56,7 @@ class TClient:
                     lists = self._extract_lists(v)
             if not board_closed:
                 boards.append(
-                    TrlBoard(board_id, raw_board['shortLink'], lists, [],
+                    TrlBoard(board_id, raw_board['shortLink'], lists, [], [],
                              raw_board))
         return boards
 

@@ -196,4 +196,5 @@ class Usecases:
     def print_board_labels(self):
         board = self.tclient.get_board(self.selected_board_id)
         for label in board.labels:
-            print('{:12} {}'.format(label.color, label.name))
+            print('[{}]   {:10} {}'.format(
+                label.id[-6:len(label.id)], label.color, label.name))

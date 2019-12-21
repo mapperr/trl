@@ -85,10 +85,25 @@ if __name__ == '__main__':
 
     selected_board_id, selected_board_name = usecases.get_selected_board()
 
-    if args['g']:
-        api_path = args['<api_path>']
-        pp = pprint.PrettyPrinter(indent=4)
-        pp.pprint(tclient.get(api_path))
+    if args['c']:
+        new_command = args['n']
+        if new_command:
+            target_list_shortcut = args['<list_shortcut>']
+            usecases.create_card(target_list_shortcut)
+        else:
+            card_shortcut = args['<card_shortcut>']
+            open_command = args['o']
+            move_command = args['m']
+            edit_command = args['e']
+            if open_command:
+                usecases.open_card_in_browser(card_shortcut)
+            elif move_command:
+                target_list_shortcut = args['<list_shortcut>']
+                usecases.move_card(card_shortcut, target_list_shortcut)
+            elif edit_command:
+                usecases.update_card(card_shortcut)
+            else:
+                usecases.print_card(card_shortcut)
 
     elif args['o']:
         usecases.open_trello_in_browser()
@@ -115,22 +130,8 @@ if __name__ == '__main__':
         list_shortcuts = args['<list_shortcuts>']
         usecases.print_lists(list_shortcuts)
 
-    elif args['c']:
-        new_command = args['n']
-        if new_command:
-            target_list_shortcut = args['<list_shortcut>']
-            usecases.create_card(target_list_shortcut)
-        else:
-            card_shortcut = args['<card_shortcut>']
-            open_command = args['o']
-            move_command = args['m']
-            edit_command = args['e']
-            if open_command:
-                usecases.open_card_in_browser(card_shortcut)
-            elif move_command:
-                target_list_shortcut = args['<list_shortcut>']
-                usecases.move_card(card_shortcut, target_list_shortcut)
-            elif edit_command:
-                usecases.update_card(card_shortcut)
-            else:
-                usecases.print_card(card_shortcut)
+    elif args['g']:
+        api_path = args['<api_path>']
+        pp = pprint.PrettyPrinter(indent=4)
+        pp.pprint(tclient.get(api_path))
+
