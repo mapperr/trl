@@ -16,7 +16,8 @@ usage:
 
 commands:
     o
-        open trello in your browser
+        opens trello home in your browser
+        or it opens the currently selected board in browser
 
     b [<board_shortcut>]
         shows the boards you can access
@@ -105,15 +106,19 @@ if __name__ == '__main__':
             else:
                 usecases.print_card(card_shortcut)
 
-    elif args['o']:
-        usecases.open_trello_in_browser()
-
     elif args['b']:
         if args['<board_shortcut>']:
             board_shortcut = args['<board_shortcut>']
             usecases.select_board(board_shortcut)
         else:
             usecases.print_board_list()
+
+    elif args['o']:
+        board_id, board_name = usecases.get_selected_board()
+        if board_id is None:
+            usecases.open_trello_in_browser()
+        else:
+            usecases.open_selected_board_in_browser()
 
     # below are stuffs that works only if a board is selected
     elif not args['b'] and selected_board_name is None:

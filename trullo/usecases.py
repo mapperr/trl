@@ -37,6 +37,11 @@ class Usecases:
     def open_trello_in_browser(self):
         subprocess.Popen(['xdg-open', 'https://trello.com'])
 
+    def open_selected_board_in_browser(self):
+        board = self.tclient.get_board(self.selected_board_id)
+        board_url = board.raw_data['shortUrl']
+        subprocess.Popen(['xdg-open', board_url])
+
     def print_board_list(self):
         boards = self.tclient.get_boards()
         self.printer.print_boards(boards)
