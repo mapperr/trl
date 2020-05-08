@@ -10,5 +10,6 @@ done
 SCRIPT_DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
 
 cd $SCRIPT_DIR >/dev/null
+
 pipenv run python trullo.py $@
 

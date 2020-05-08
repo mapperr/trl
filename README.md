@@ -7,7 +7,7 @@ A dumb trello cli with shortcuts.
 
 Get the repo and run `pipenv install` in it.
 
-You don't have pipenv installed? Shame on you.\
+You don't have pipenv installed? \
 ([Here](https://pipenv.readthedocs.io/en/latest/install/#pragmatic-installation-of-pipenv)
 is how you can get it, but usually is a `pip install --user pipenv`)
 
@@ -37,7 +37,7 @@ Here is the usage (check `trl -h` too):
         shows the boards you can access
         with board_shortcut you can select the board you want to work with
 
-    trl l [<list_shortcut>]
+    trl l [<list_shortcut> [<list_shortcut>]]
         shows lists and cards in the board you have currently selected
         with list_shortcut you can show cards of a single list
 
@@ -48,10 +48,10 @@ Here is the usage (check `trl -h` too):
         shows the card infos
         with o it opens the card shortUrl with your default browser
         with m and a target list you can move the card to that list
-        with e you can edit the card title and description in your editor
+        with e you can edit the card title and description in your $EDITOR
 
     trl c n <list_shortcut>
-        create a new card in the list specified by list_shortcut
+        pops your $EDITOR to create a new card in the list specified by list_shortcut
 
     trl g <api_path>
         make a direct api call adding auth params automatically (for debugging/hacking purpose)
@@ -66,15 +66,12 @@ you get something like this:
 
     trl c arch m done
 
-Oh, everything is kept lowercase, holding shift is a pain in the ass.
+Everything is kept lowercase, holding shift is a pain in the ass.
 
 
 ## Notes
 
-I know, It's nothing fancy, I just started it to check some trello stuff
-directly in the terminal, and eventually edit them.
+I know, It's nothing fancy, I just started because I have to use Trello
+and I wanted to check some stuff directly from the terminal, and eventually
+edit them or open them in the browser.
 
-
-### Development board
-
-- https://trello.com/b/fuK3ff2z

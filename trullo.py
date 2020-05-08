@@ -77,7 +77,7 @@ if __name__ == '__main__':
     tclient = TClient()
 
     tmpdir = tempfile.gettempdir()
-    selected_board_filepath = f'{tmpdir}/.trl-selected-board'
+    selected_board_filepath = f'{tmpdir}/trl-selected-board'
 
     usecases = Usecases(TConfig(selected_board_filepath),
                         TClient(),
