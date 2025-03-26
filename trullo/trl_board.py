@@ -7,6 +7,7 @@ from trullo.shortcuttable import Shortcuttable
 from trullo.trl_card import TrlCard
 from trullo.trl_label import TrlLabel
 from trullo.trl_list import TrlList
+from trullo.trl_member import TrlMember
 
 
 @attr.s(auto_attribs=True)
@@ -16,6 +17,7 @@ class TrlBoard(Shortcuttable):
     lists: List[TrlList]
     cards: List[TrlCard]
     labels: List[TrlLabel]
+    members: List[TrlMember]
     raw_data: Dict
 
     def get_normalized_name(self) -> str:

@@ -6,6 +6,7 @@ usage:
     trl l [<list_shortcuts>...]
     trl ll
     trl lb
+    trl bm
     trl c <card_shortcut> [o | m <list_shortcut> | e | n <list_shortcut>]
     trl c n <list_shortcut>
     trl g <api_path>
@@ -32,6 +33,9 @@ commands:
 
     lb
         shows the board's labels
+
+    bm
+        shows the board's members
 
     c <card_shortcut> [o | m <list_shortcut> | e]
         shows the card infos
@@ -133,6 +137,9 @@ if __name__ == '__main__':
 
     elif args['lb']:
         usecases.print_board_labels()
+
+    elif args['bm']:
+        usecases.print_board_members()
 
     elif args['l']:
         list_shortcuts = args['<list_shortcuts>']

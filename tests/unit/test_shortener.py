@@ -67,7 +67,7 @@ class TestShortener(unittest.TestCase):
         label1 = TrlLabel('idlb1', lblname := 'feature',
                           {'name': lblname, 'color': 'blue'}, 'blue')
         board1 = TrlBoard('idb1', shortLink := 'p01UyT', [list1],
-                          [card1, card2, card3], [label1],
+                          [card1, card2, card3], [label1], [],
                           {'name': 'my Super Board',
                            'shortLink': shortLink})
 
