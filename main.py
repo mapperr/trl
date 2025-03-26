@@ -48,6 +48,7 @@ commands:
 
     g <api_path>
         make a direct api call adding auth params automatically (for debugging/hacking purpose)
+        Cf. https://developer.atlassian.com/cloud/trello/rest
 
 env:
     you have to export this 2 variables to authenticate with trello:
