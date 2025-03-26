@@ -203,4 +203,4 @@ class Usecases:
         board = self.tclient.get_board(self.selected_board_id)
         for label in board.labels:
             print('[{}]   {:10} {}'.format(
-                label.id[-6:len(label.id)], label.color, label.name))
+                label.id, label.color or "", label.name))

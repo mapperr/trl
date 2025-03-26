@@ -30,6 +30,9 @@ commands:
     ll
         shows only the board's lists
 
+    lb
+        shows the board's labels
+
     c <card_shortcut> [o | m <list_shortcut> | e]
         shows the card infos
         with o it opens the card shortLink with your default browser
