@@ -57,6 +57,7 @@ env:
 trello development board: https://trello.com/b/fuK3ff2z
 
 """
+import json
 import logging
 import pprint
 import tempfile
@@ -140,6 +141,4 @@ if __name__ == '__main__':
 
     elif args['g']:
         api_path = args['<api_path>']
-        pp = pprint.PrettyPrinter(indent=4)
-        pp.pprint(tclient.get(api_path))
-
+        print(json.dumps(tclient.get(api_path), indent=2))
