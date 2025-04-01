@@ -36,6 +36,9 @@ Here is the usage (check `trl -h` too):
         shows the boards you can access
         with board_shortcut you can select the board you want to work with
 
+    trl lb
+        shows the board's labels
+
     trl l [<list_shortcut> [<list_shortcut>]]
         shows lists and cards in the board you have currently selected
         with list_shortcut you can show cards of a single list
