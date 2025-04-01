@@ -1,18 +1,16 @@
 # trl
 
-A dumb trello cli with shortcuts.
+A dumb trello cli with shortcuts .
 
 
 ## Setup
 
-Get the repo and run `pipenv install` in it.
+Get the repo and run `uv venv` in it .
 
-You don't have pipenv installed?
+You don't have `uv` installed?
 
-([Here](https://pipenv.readthedocs.io/en/latest/install/#pragmatic-installation-of-pipenv)
-is how you can get it, but usually is a `pip install --user pipenv`)
-
-Yeah, I know you want a binary, I will package this thing, bear it for now.
+([Here](https://docs.astral.sh/uv/getting-started/installation/)
+is how you can get it .
 
 Authenticate yourself by putting these variables in you environment:
 

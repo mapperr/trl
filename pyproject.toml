@@ -1,0 +1,11 @@
+[project]
+name = "trl"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "attrs>=25.3.0",
+    "docopt>=0.6.2",
+    "requests>=2.32.3",
+]
