@@ -28,7 +28,7 @@ class Usecases:
         if os.path.exists(self.tconfig.selected_board_filepath):
             with open(self.tconfig.selected_board_filepath, 'r') as fh:
                 selected_board_id, selected_board_name = \
-                    fh.readline().split(' ', 1)
+                    fh.readline().split(',', 1)
                 self.selected_board_id = selected_board_id
                 self.selected_board_name = selected_board_name
                 return selected_board_id, selected_board_name
@@ -62,11 +62,12 @@ class Usecases:
             print(
                 f'shortcut [{board_shortcut}] matches more than one board: '
                 f'{matching_names}')
-            exit(1)
+            return
         board = matching_boards[0]
-        print(f'selected board {board.raw_data["name"]}')
+
+        # file
         with open(self.tconfig.selected_board_filepath, 'w') as fh:
-            fh.write(f'{board.id} {board.raw_data["name"]}')
+            fh.write(f'{board.id},{board.raw_data["name"]}')
 
     def print_board_lists(self):
         board = self.tclient.get_board(self.selected_board_id)
@@ -202,4 +203,4 @@ class Usecases:
         board = self.tclient.get_board(self.selected_board_id)
         for label in board.labels:
             print('[{}]   {:10} {}'.format(
-                label.id[-6:len(label.id)], label.color, label.name))
+                label.id, label.color or "", label.name))

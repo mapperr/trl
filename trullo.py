@@ -30,6 +30,9 @@ commands:
     ll
         shows only the board's lists
 
+    lb
+        shows the board's labels
+
     c <card_shortcut> [o | m <list_shortcut> | e]
         shows the card infos
         with o it opens the card shortLink with your default browser
@@ -77,7 +80,7 @@ if __name__ == '__main__':
     tclient = TClient()
 
     tmpdir = tempfile.gettempdir()
-    selected_board_filepath = f'{tmpdir}/.trl-selected-board'
+    selected_board_filepath = f'{tmpdir}/trl-selected-board'
 
     usecases = Usecases(TConfig(selected_board_filepath),
                         TClient(),
