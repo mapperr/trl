@@ -10,7 +10,7 @@ Get the repo and run `uv venv` in it .
 You don't have `uv` installed?
 
 ([Here](https://docs.astral.sh/uv/getting-started/installation/)
-is how you can get it .
+is how you can get it)
 
 Authenticate yourself by putting these variables in you environment:
 
@@ -60,8 +60,11 @@ Here is the usage (check `trl -h` too):
 
 ## Shortcuts
 
-Shortcuts are derived from boards and cards names and short urls
-and from lists names and ids (lists does not have short urls).
+Shortcuts are derived from:
+
+- boards names and short urls
+- cards names and short urls
+- lists names and ids (lists does not have short urls)
 
 So to move the card *Architecture design* to the list *Done*
 you get something like this:
