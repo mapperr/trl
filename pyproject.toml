@@ -3,7 +3,7 @@ name = "trl"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 dependencies = [
     "attrs>=25.3.0",
     "docopt-ng>=0.9.0",
