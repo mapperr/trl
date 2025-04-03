@@ -204,3 +204,9 @@ class Usecases:
         for label in board.labels:
             print('[{}]   {:10} {}'.format(
                 label.id, label.color or "", label.name))
+
+    def print_board_members(self):
+        board = self.tclient.get_board(self.selected_board_id)
+        for member in board.members:
+            print('[{}]   {:10} (@{})'.format(
+                member.id, member.fullname, member.username))

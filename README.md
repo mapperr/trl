@@ -46,6 +46,9 @@ Here is the usage (check `trl -h` too):
     trl ll
         shows only the board's lists
 
+    trl bm
+        shows the board's members
+
     trl c <card_shortcut> [o | m <list_shortcut> | e]
         shows the card infos
         with o it opens the card shortUrl with your default browser
@@ -57,6 +60,7 @@ Here is the usage (check `trl -h` too):
 
     trl g <api_path>
         make a direct api call adding auth params automatically (for debugging/hacking purpose)
+        Cf. [REST API reference](https://developer.atlassian.com/cloud/trello/rest)
 
 ## Shortcuts
 

@@ -6,6 +6,7 @@ usage:
     trl l [<list_shortcuts>...]
     trl ll
     trl lb
+    trl bm
     trl c <card_shortcut> [o | m <list_shortcut> | e | n <list_shortcut>]
     trl c n <list_shortcut>
     trl g <api_path>
@@ -33,6 +34,9 @@ commands:
     lb
         shows the board's labels
 
+    bm
+        shows the board's members
+
     c <card_shortcut> [o | m <list_shortcut> | e]
         shows the card infos
         with o it opens the card shortLink with your default browser
@@ -44,6 +48,7 @@ commands:
 
     g <api_path>
         make a direct api call adding auth params automatically (for debugging/hacking purpose)
+        Cf. https://developer.atlassian.com/cloud/trello/rest
 
 env:
     you have to export this 2 variables to authenticate with trello:
@@ -133,6 +138,9 @@ if __name__ == '__main__':
 
     elif args['lb']:
         usecases.print_board_labels()
+
+    elif args['bm']:
+        usecases.print_board_members()
 
     elif args['l']:
         list_shortcuts = args['<list_shortcuts>']

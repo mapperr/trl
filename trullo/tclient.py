@@ -9,6 +9,7 @@ from trullo.trl_board import TrlBoard
 from trullo.trl_card import TrlCard
 from trullo.trl_label import TrlLabel
 from trullo.trl_list import TrlList
+from trullo.trl_member import TrlMember
 
 logger = logging.getLogger(__name__)
 
@@ -56,7 +57,7 @@ class TClient:
                     lists = self._extract_lists(v)
             if not board_closed:
                 boards.append(
-                    TrlBoard(board_id, raw_board['shortLink'], lists, [], [],
+                    TrlBoard(board_id, raw_board['shortLink'], lists, [], [], [],
                              raw_board))
         return boards
 
@@ -64,8 +65,9 @@ class TClient:
         res = self.get(f'/batch?urls=/board/{board_id},'
                        f'/board/{board_id}/labels,'
                        f'/board/{board_id}/lists/open,'
-                       f'/board/{board_id}/cards/open')
-        board = TrlBoard(board_id, board_id, [], [], [], res[0]['200'])
+                       f'/board/{board_id}/cards/open,'
+                       f'/board/{board_id}/members')
+        board = TrlBoard(board_id, board_id, [], [], [], [], res[0]['200'])
         for item in res[1]['200']:
             label = TrlLabel(item['id'],
                              item['name'],
@@ -78,6 +80,9 @@ class TClient:
         for item in res[3]['200']:
             card = TrlCard(item['id'], item['shortLink'], item)
             board.cards.append(card)
+        for item in res[4]['200']:
+            member = TrlMember(item['id'], item['fullName'], item['username'], item)
+            board.members.append(member)
         return board
 
     def _extract_lists(self, raw_list: Dict) -> List[TrlList]:
