@@ -12,7 +12,7 @@ class Printer:
     @staticmethod
     def print_boards(boards: List[TrlBoard]):
         for board in boards:
-            print(f"[{board.raw_data['shortLink'].lower()}] "
+            print(f"[{board.raw_data['shortLink']}] "
                   f"{board.raw_data['name']}")
 
     @staticmethod
@@ -38,7 +38,7 @@ class Printer:
                     if card.raw_data['idList'] == list_.id:
                         card_output = \
                             f"\n\t{card.raw_data['name']}" \
-                            f"\n\t[{card.raw_data['shortLink'].lower()}] "
+                            f"\n\t[{card.raw_data['shortLink']}] "
                         for raw_label in card.raw_data['labels']:
                             card_output += f'({raw_label["name"]}) '
                         print(card_output)
