@@ -75,8 +75,6 @@ you get something like this:
 
     trl c arch m done
 
-Everything is kept lowercase, holding shift is a pain in the ass.
-
 
 ## Notes
 
