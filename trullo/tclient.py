@@ -151,4 +151,4 @@ class TClient:
             api_path += f'&name={name}'
         if desc is not None:
             api_path += f'&desc={desc}'
-        self.post(api_path)
+        return self.post(api_path)
