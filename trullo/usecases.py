@@ -112,7 +112,8 @@ class Usecases:
         list_id = matching_lists[0].id
 
         new_card_name, new_card_desc = self._edit_card()
-        self.tclient.new_card(list_id, new_card_name, new_card_desc)
+        response = self.tclient.new_card(list_id, new_card_name, new_card_desc)
+        print(response.get("shortUrl"))
 
     def update_card(self, card_shortcut: str):
         card = self._get_card(card_shortcut)
