@@ -95,6 +95,10 @@ if __name__ == '__main__':
 
     selected_board_id, selected_board_name = usecases.get_selected_board()
 
+    if not args['b'] and selected_board_name is None:
+        print(f'first select a board with `trl b`')
+        exit(1)
+
     if args['c']:
         new_command = args['n']
         if new_command:
@@ -128,11 +132,6 @@ if __name__ == '__main__':
             usecases.open_trello_in_browser()
         else:
             usecases.open_selected_board_in_browser()
-
-    # below are stuffs that works only if a board is selected
-    elif not args['b'] and selected_board_name is None:
-        print(f'first select a board with `trl b`')
-        exit(1)
 
     elif args['ll']:
         usecases.print_board_lists()
