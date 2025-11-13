@@ -33,9 +33,12 @@ class TClient:
         return self.handle_res(
             requests.get(self.base_url + path, self.build_auth_params()))
 
-    def post(self, path: str) -> Dict:
+    def post(self, path: str, **data) -> Dict:
         return self.handle_res(
-            requests.post(self.base_url + path, self.build_auth_params()))
+            requests.post(
+                self.base_url + path, self.build_auth_params() | data
+            )
+        )
 
     def put(self, path: str) -> Dict:
         return self.handle_res(
@@ -144,6 +147,10 @@ class TClient:
             api_path += '' if api_path.endswith('?') else '&'
             api_path += f'desc={desc}'
         self.put(api_path)
+
+    def comment_card(self, card_id: str, comment: str):
+        api_path = f'/cards/{card_id}/actions/comments'
+        self.post(api_path, text=comment)
 
     def new_card(self, list_id: str, name: str = None, desc: str = None):
         api_path = f'/cards/?idList={list_id}'
