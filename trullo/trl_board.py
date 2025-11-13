@@ -24,3 +24,8 @@ class TrlBoard(Shortcuttable):
         return Normalizer.normalize(
             f"{self.raw_data['name']}{self.raw_data['shortLink']}"
         )
+
+    def find_member(self, id: str) -> TrlMember | None:
+        for member in self.members:
+            if member.id == id:
+                return member

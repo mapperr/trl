@@ -41,6 +41,13 @@ class Printer:
                             f"\n\t[{card.raw_data['shortLink']}] "
                         for raw_label in card.raw_data['labels']:
                             card_output += f'({raw_label["name"]}) '
+                        if card.raw_data["idMembers"]:
+                            card_output += "\n\t"
+                            for member_id in card.raw_data["idMembers"]:
+                                member = board.find_member(member_id)
+                                if member is None:
+                                    continue
+                                card_output += f"<{member.fullname}> "
                         print(card_output)
         print()
 
@@ -57,7 +64,7 @@ class Printer:
         print()
 
     @staticmethod
-    def print_card(card: TrlCard):
+    def print_card(card: TrlCard, board: TrlBoard):
         d = card.raw_data
         formatted_desc = '\t' + str(d['desc']).replace('\n', '\n\t')
 
@@ -71,6 +78,12 @@ class Printer:
                 if label["name"] is not None and label["name"] != "" \
                 else label["color"]
             print(f'({label_name})  ', end='')
+        print()
+        for member_id in d["idMembers"]:
+            member = board.find_member(member_id)
+            if member is None:
+                continue
+            print(f"<{member.fullname}>", end=' ')
         print()
         print(formatted_desc)
         print()

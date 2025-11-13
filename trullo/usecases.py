@@ -83,7 +83,7 @@ class Usecases:
 
     def print_card(self, card_shortcut: str):
         card = self._get_card(card_shortcut)
-        self.printer.print_card(card)
+        self.printer.print_card(card, self.board)
 
     def open_card_in_browser(self, card_shortcut: str):
         card = self._get_card(card_shortcut)
