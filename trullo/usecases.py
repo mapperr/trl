@@ -120,6 +120,10 @@ class Usecases:
         card_new_name, card_new_desc = self._edit_card(card)
         self.tclient.edit_card(card.id, card_new_name, card_new_desc)
 
+    def comment_card(self, card_shortcut: str, comment: str):
+        card = self._get_card(card_shortcut)
+        self.tclient.comment_card(card.id, comment)
+
     def move_card(self, card_shortcut: str, target_list_shortcut: str):
         board = self.tclient.get_board(self.selected_board_id)
         matching_lists: List[TrlList] = Normalizer.get_matches(

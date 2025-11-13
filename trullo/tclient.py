@@ -148,6 +148,10 @@ class TClient:
             api_path += f'desc={desc}'
         self.put(api_path)
 
+    def comment_card(self, card_id: str, comment: str):
+        api_path = f'/cards/{card_id}/actions/comments'
+        self.post(api_path, text=comment)
+
     def new_card(self, list_id: str, name: str = None, desc: str = None):
         api_path = f'/cards/?idList={list_id}'
         if name is not None:
