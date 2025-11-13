@@ -21,6 +21,7 @@ class Usecases:
     tclient: TClient
     shortener: Normalizer
     printer: Printer
+    board: TrlBoard | None = attr.ib(default=None)
     selected_board_id: Optional[str] = attr.ib(default=None)
     selected_board_name: Optional[str] = attr.ib(default=None)
 
@@ -38,7 +39,7 @@ class Usecases:
         subprocess.Popen(['xdg-open', 'https://trello.com'])
 
     def open_selected_board_in_browser(self):
-        board = self.tclient.get_board(self.selected_board_id)
+        board = self._get_board()
         board_url = board.raw_data['shortUrl']
         subprocess.Popen(['xdg-open', board_url])
 
@@ -70,11 +71,11 @@ class Usecases:
             fh.write(f'{board.id},{board.raw_data["name"]}')
 
     def print_board_lists(self):
-        board = self.tclient.get_board(self.selected_board_id)
+        board = self._get_board()
         self.printer.print_board_lists(board)
 
     def print_lists(self, lists_shortcuts: Optional[List[str]]):
-        board = self.tclient.get_board(self.selected_board_id)
+        board = self._get_board()
         if lists_shortcuts is not None and len(lists_shortcuts) > 0:
             Printer.print_board(board, lists_shortcuts)
         else:
@@ -82,14 +83,14 @@ class Usecases:
 
     def print_card(self, card_shortcut: str):
         card = self._get_card(card_shortcut)
-        self.printer.print_card(card)
+        self.printer.print_card(card, self.board)
 
     def open_card_in_browser(self, card_shortcut: str):
         card = self._get_card(card_shortcut)
         subprocess.Popen(['xdg-open', card.raw_data['shortUrl']])
 
     def create_card(self, target_list_shortcut: str):
-        board = self.tclient.get_board(self.selected_board_id)
+        board = self._get_board()
         matching_lists: List[TrlList] = Normalizer.get_matches(
             target_list_shortcut,
             board.lists
@@ -125,7 +126,7 @@ class Usecases:
         self.tclient.comment_card(card.id, comment)
 
     def move_card(self, card_shortcut: str, target_list_shortcut: str):
-        board = self.tclient.get_board(self.selected_board_id)
+        board = self._get_board()
         matching_lists: List[TrlList] = Normalizer.get_matches(
             target_list_shortcut,
             board.lists
@@ -152,8 +153,14 @@ class Usecases:
 
         self.tclient.move_card(card.id, list_id)
 
+    def _get_board(self) -> TrlBoard:
+        if self.board is not None:
+            return self.board
+        self.board = self.tclient.get_board(self.selected_board_id)
+        return self.board
+
     def _get_card(self, card_shortcut):
-        board = self.tclient.get_board(self.selected_board_id)
+        board = self._get_board()
         matching_cards: List[TrlCard] = Normalizer.get_matches(
             card_shortcut,
             board.cards
@@ -205,13 +212,13 @@ class Usecases:
                urllib.parse.quote(str.join('', lines[2:]), safe='')
 
     def print_board_labels(self):
-        board = self.tclient.get_board(self.selected_board_id)
+        board = self._get_board()
         for label in board.labels:
             print('[{}]   {:10} {}'.format(
                 label.id, label.color or "", label.name))
 
     def print_board_members(self):
-        board = self.tclient.get_board(self.selected_board_id)
+        board = self._get_board()
         for member in board.members:
             print('[{}]   {:10} (@{})'.format(
                 member.id, member.fullname, member.username))
