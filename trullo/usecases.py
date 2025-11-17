@@ -114,8 +114,10 @@ class Usecases:
 
         new_card_name, new_card_desc = self._edit_card()
         member_ids = self._get_member_ids()
+        label_ids = self._get_label_ids()
         response = self.tclient.new_card(list_id,
-                                         new_card_name, new_card_desc, member_ids)
+                                         new_card_name, new_card_desc,
+                                         member_ids, label_ids)
         print(response.get("shortUrl"))
 
     def update_card(self, card_shortcut: str):
@@ -222,6 +224,16 @@ class Usecases:
         )
         indices = [int(i) for i in raw_indices.split(",") if 0 < int(i) <= len(board.members)]
         return [board.members[i - 1].id for i in indices]
+
+    def _get_label_ids(self):
+        board = self._get_board()
+        for i, label in enumerate(board.labels, start=1):
+            print(f"{i:>2}. {label.name}")
+        raw_indices = input(
+            "Please add labels to the card (type a comma-separated list of numbers): "
+        )
+        indices = [int(i) for i in raw_indices.split(",") if 0 < int(i) <= len(board.labels)]
+        return [board.labels[i - 1].id for i in indices]
 
     def print_board_labels(self):
         board = self._get_board()
