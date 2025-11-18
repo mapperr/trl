@@ -113,7 +113,11 @@ class Usecases:
         list_id = matching_lists[0].id
 
         new_card_name, new_card_desc = self._edit_card()
-        response = self.tclient.new_card(list_id, new_card_name, new_card_desc)
+        member_ids = self._get_member_ids()
+        label_ids = self._get_label_ids()
+        response = self.tclient.new_card(list_id,
+                                         new_card_name, new_card_desc,
+                                         member_ids, label_ids)
         print(response.get("shortUrl"))
 
     def update_card(self, card_shortcut: str):
@@ -210,6 +214,26 @@ class Usecases:
             lines = fd.readlines()
         return urllib.parse.quote(lines[1].replace('\n', ''), safe=''), \
                urllib.parse.quote(str.join('', lines[2:]), safe='')
+
+    def _get_member_ids(self):
+        board = self._get_board()
+        for i, member in enumerate(board.members, start=1):
+            print(f"{i:>2}. {member.fullname}")
+        raw_indices = input(
+            "Please add members to the card (type a comma-separated list of numbers): "
+        )
+        indices = [int(i) for i in raw_indices.split(",") if 0 < int(i) <= len(board.members)]
+        return [board.members[i - 1].id for i in indices]
+
+    def _get_label_ids(self):
+        board = self._get_board()
+        for i, label in enumerate(board.labels, start=1):
+            print(f"{i:>2}. {label.name}")
+        raw_indices = input(
+            "Please add labels to the card (type a comma-separated list of numbers): "
+        )
+        indices = [int(i) for i in raw_indices.split(",") if 0 < int(i) <= len(board.labels)]
+        return [board.labels[i - 1].id for i in indices]
 
     def print_board_labels(self):
         board = self._get_board()

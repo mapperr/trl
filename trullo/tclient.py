@@ -152,8 +152,13 @@ class TClient:
         api_path = f'/cards/{card_id}/actions/comments'
         self.post(api_path, text=comment)
 
-    def new_card(self, list_id: str, name: str = None, desc: str = None):
+    def new_card(self, list_id: str, name: str = None, desc: str = None, member_ids:
+                 list[str] | None = None, label_ids: list[str] | None = None):
         api_path = f'/cards/?idList={list_id}'
+        if member_ids:
+            api_path += f"&idMembers={','.join(member_ids)}"
+        if label_ids:
+            api_path += f"&idLabels={','.join(label_ids)}"
         if name is not None:
             api_path += f'&name={name}'
         if desc is not None:
