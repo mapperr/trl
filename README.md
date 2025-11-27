@@ -32,12 +32,13 @@ As for now you can do basic stuff.
 
 Here is the usage (check `trl -h` too):
 
+    trl o
+        opens trello home in your browser
+        or it opens the currently selected board in browser
+
     trl b [<board_shortcut>]
         shows the boards you can access
         with board_shortcut you can select the board you want to work with
-
-    trl lb
-        shows the board's labels
 
     trl l [<list_shortcut> [<list_shortcut>]]
         shows lists and cards in the board you have currently selected
@@ -46,14 +47,18 @@ Here is the usage (check `trl -h` too):
     trl ll
         shows only the board's lists
 
+    trl lb
+        shows the board's labels
+
     trl bm
         shows the board's members
 
-    trl c <card_shortcut> [o | m <list_shortcut> | e]
+    trl c <card_shortcut> [o | m <list_shortcut> | e | co [<comment>]]
         shows the card infos
         with o it opens the card shortUrl with your default browser
         with m and a target list you can move the card to that list
         with e you can edit the card title and description in your $EDITOR
+        with co you can post a comment to the card (if omitted, opens your $EDITOR)
 
     trl c n <list_shortcut>
         pops your $EDITOR to create a new card in the list specified by list_shortcut
