@@ -125,8 +125,13 @@ class Usecases:
         card_new_name, card_new_desc = self._edit_card(card)
         self.tclient.edit_card(card.id, card_new_name, card_new_desc)
 
-    def comment_card(self, card_shortcut: str, comment: str):
+    def comment_card(self, card_shortcut: str, comment: str | None):
         card = self._get_card(card_shortcut)
+        if comment is None:
+            tempfile_suffix = "comment"
+            content = "# Please enter the comment below."
+            lines = self._write_to_temp_file(tempfile_suffix, content)
+            comment = "\n".join(lines[1:])
         self.tclient.comment_card(card.id, comment)
 
     def move_card(self, card_shortcut: str, target_list_shortcut: str):

@@ -7,7 +7,7 @@ usage:
     trl ll
     trl lb
     trl bm
-    trl c <card_shortcut> [o | m <list_shortcut> | e | n <list_shortcut> | co <comment>]
+    trl c <card_shortcut> [o | m <list_shortcut> | e | n <list_shortcut> | co [<comment>]]
     trl c n <list_shortcut>
     trl g <api_path>
     trl -h
@@ -37,12 +37,12 @@ commands:
     bm
         shows the board's members
 
-    c <card_shortcut> [o | m <list_shortcut> | e | co <comment>]
+    c <card_shortcut> [o | m <list_shortcut> | e | co [<comment>]]
         shows the card infos
-        with o it opens the card shortLink with your default browser
+        with o it opens the card shortUrl with your default browser
         with m and a target list you can move the card to that list
         with e you can edit the card title and description in your $EDITOR
-        with co you can post a comment to the card
+        with co you can post a comment to the card (if omitted, opens your $EDITOR)
 
     c n <list_shortcut>
         create a new card in the list specified by list_shortcut
@@ -119,7 +119,7 @@ if __name__ == '__main__':
             elif edit_command:
                 usecases.update_card(card_shortcut)
             elif comment_command:
-                comment = args['<comment>']
+                comment = args.get('<comment>')
                 usecases.comment_card(card_shortcut, comment)
             else:
                 usecases.print_card(card_shortcut)
