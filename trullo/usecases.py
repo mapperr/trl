@@ -125,8 +125,13 @@ class Usecases:
         card_new_name, card_new_desc = self._edit_card(card)
         self.tclient.edit_card(card.id, card_new_name, card_new_desc)
 
-    def comment_card(self, card_shortcut: str, comment: str):
+    def comment_card(self, card_shortcut: str, comment: str | None):
         card = self._get_card(card_shortcut)
+        if comment is None:
+            tempfile_suffix = "comment"
+            content = "# Please enter the comment below."
+            lines = self._write_to_temp_file(tempfile_suffix, content)
+            comment = "\n".join(lines[1:])
         self.tclient.comment_card(card.id, comment)
 
     def move_card(self, card_shortcut: str, target_list_shortcut: str):
@@ -194,26 +199,30 @@ class Usecases:
         :param card_to_edit:
         :return: a Tuple with the new name and description of the card
         """
-        tempfile_suffix = 'newcard.md'
+        tempfile_suffix = 'newcard'
         clean_card_name = 'New Card Title'
         card_description = 'New Card Description'
         if card_to_edit is not None:
-            tempfile_suffix = f'{card_to_edit.id}.md'
+            tempfile_suffix = f'{card_to_edit.id}'
             clean_card_name = str(card_to_edit.raw_data['name']).replace('\n',
                                                                          '')
             card_description = card_to_edit.raw_data['desc']
 
-        tmpfile_path = f'{tempfile.gettempdir()}/.trl-{tempfile_suffix}'
+        content = "# The line below is the card title, " \
+            "lines after that are the card description\n" \
+            f"{clean_card_name}\n{card_description}"
+        lines = self._write_to_temp_file(tempfile_suffix, content)
+        return urllib.parse.quote(lines[1].replace('\n', ''), safe=''), \
+               urllib.parse.quote(str.join('', lines[2:]), safe='')
+
+    def _write_to_temp_file(self, suffix: str, content: str) -> list[str]:
+        tmpfile_path = f'{tempfile.gettempdir()}/.trl-{suffix}.md'
         with open(tmpfile_path, 'w') as fd:
-            fd.writelines(
-                f"# The line below is the card title, "
-                f"lines after that are the card description\n"
-                f"{clean_card_name}\n{card_description}")
+            fd.writelines(content)
         subprocess.Popen([os.environ.get('EDITOR'), tmpfile_path]).wait()
         with open(tmpfile_path, 'r') as fd:
             lines = fd.readlines()
-        return urllib.parse.quote(lines[1].replace('\n', ''), safe=''), \
-               urllib.parse.quote(str.join('', lines[2:]), safe='')
+        return lines
 
     def _get_member_ids(self):
         board = self._get_board()
