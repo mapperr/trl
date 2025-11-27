@@ -222,6 +222,8 @@ class Usecases:
         raw_indices = input(
             "Please add members to the card (type a comma-separated list of numbers): "
         )
+        if not raw_indices.split():
+            return []
         indices = [int(i) for i in raw_indices.split(",") if 0 < int(i) <= len(board.members)]
         return [board.members[i - 1].id for i in indices]
 
@@ -232,6 +234,8 @@ class Usecases:
         raw_indices = input(
             "Please add labels to the card (type a comma-separated list of numbers): "
         )
+        if not raw_indices.split():
+            return []
         indices = [int(i) for i in raw_indices.split(",") if 0 < int(i) <= len(board.labels)]
         return [board.labels[i - 1].id for i in indices]
 
