@@ -28,4 +28,4 @@ class Normalizer:
 
     @staticmethod
     def is_a_match(shortcut: str, normalized_name: str) -> bool:
-        return shortcut in normalized_name
+        return shortcut.lower() in normalized_name
