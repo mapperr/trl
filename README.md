@@ -63,8 +63,9 @@ Here is the usage (check `trl -h` too):
     trl c n <list_shortcut>
         pops your $EDITOR to create a new card in the list specified by list_shortcut
 
-    trl g <api_path>
+    trl api <method_or_path> [<path>]
         make a direct api call adding auth params automatically (for debugging/hacking purpose)
+        method can be get/post/put/delete (default: get)
         Cf. [REST API reference](https://developer.atlassian.com/cloud/trello/rest)
 
 ## Shortcuts
