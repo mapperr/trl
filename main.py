@@ -9,7 +9,7 @@ usage:
     trl bm
     trl c <card_shortcut> [o | m <list_shortcut> | e | n <list_shortcut> | co [<comment>]]
     trl c n <list_shortcut>
-    trl g <api_path>
+    trl api <method_or_path> [<path>]
     trl -h
 
     -h --help  this help message
@@ -47,8 +47,9 @@ commands:
     c n <list_shortcut>
         create a new card in the list specified by list_shortcut
 
-    g <api_path>
+    api <method_or_path> [<path>]
         make a direct api call adding auth params automatically (for debugging/hacking purpose)
+        method can be get/post/put/delete (default: get)
         Cf. https://developer.atlassian.com/cloud/trello/rest
 
 env:
@@ -151,6 +152,12 @@ if __name__ == '__main__':
         list_shortcuts = args['<list_shortcuts>']
         usecases.print_lists(list_shortcuts)
 
-    elif args['g']:
-        api_path = args['<api_path>']
-        print(json.dumps(tclient.get(api_path), indent=2))
+    elif args['api']:
+        api_path = args.get('<path>')
+        if api_path is None:
+            api_path = args["<method_or_path>"]
+            method = "get"
+        else:
+            method = args["<method_or_path>"]
+        response = getattr(tclient, method)(api_path)
+        print(json.dumps(response, indent=2))
