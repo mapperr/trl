@@ -1,3 +1,4 @@
+import json
 import os
 import subprocess
 import tempfile
@@ -259,3 +260,7 @@ class Usecases:
         for member in board.members:
             print('[{}]   {:10} (@{})'.format(
                 member.id, member.fullname, member.username))
+
+    def run_api_request(self, *, method, path):
+        response = getattr(self.tclient, method)(path)
+        print(json.dumps(response, indent=2))

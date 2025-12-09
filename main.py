@@ -64,9 +64,7 @@ env:
 trello development board: https://trello.com/b/fuK3ff2z
 
 """
-import json
 import logging
-import pprint
 import tempfile
 
 from docopt import docopt
@@ -84,8 +82,6 @@ logger = logging.getLogger(__name__)
 
 if __name__ == '__main__':
     args = docopt(__doc__, version='Trullo beta')
-
-    tclient = TClient()
 
     tmpdir = tempfile.gettempdir()
     selected_board_filepath = f'{tmpdir}/trl-selected-board'
@@ -159,5 +155,4 @@ if __name__ == '__main__':
             method = "get"
         else:
             method = args["<method_or_path>"]
-        response = getattr(tclient, method)(api_path)
-        print(json.dumps(response, indent=2))
+        usecases.run_api_request(method=method, path=api_path)
