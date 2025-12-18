@@ -3,6 +3,7 @@
 usage:
     trl o
     trl b [<board_shortcut>]
+    trl l n <list_name> [<after_list_shortcut>]
     trl l [<list_shortcuts>...]
     trl ll
     trl lb
@@ -27,6 +28,9 @@ commands:
     l [<list_shortcuts>...]
         shows lists and cards in the board you have currently selected
         with list_shortcuts you can show only selected lists and their cards
+
+    l n <list_name> [<after_list_shortcut>]
+        create a new list on the board
 
     ll
         shows only the board's lists
@@ -145,8 +149,15 @@ if __name__ == '__main__':
         usecases.print_board_members()
 
     elif args['l']:
-        list_shortcuts = args['<list_shortcuts>']
-        usecases.print_lists(list_shortcuts)
+        breakpoint()
+        new_command = args['n']
+        if new_command:
+            list_name = args['<list_name>']
+            after_list_shortcut = args.get('<after_list_shortcut>')
+            usecases.create_list(list_name, after_list_shortcut)
+        else:
+            list_shortcuts = args['<list_shortcuts>']
+            usecases.print_lists(list_shortcuts)
 
     elif args['api']:
         api_path = args.get('<path>')

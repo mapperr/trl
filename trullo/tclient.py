@@ -114,6 +114,10 @@ class TClient:
             lists.append(TrlList(id_, raw_data))
         return lists
 
+    def create_list(self, *, name: str, board_id: str):
+        data = {"name": name, "idBoard": board_id}
+        return self.post("/lists", **data)
+
     def get_cards(self, list_id: str = None) -> List[TrlCard]:
         api_path = '/members/me/cards'
         if list_id is not None:

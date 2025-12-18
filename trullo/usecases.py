@@ -82,6 +82,12 @@ class Usecases:
         else:
             Printer.print_board(board)
 
+    def create_list(self, list_name: str, after_list_shortcut: str | None):
+        board = self._get_board()
+        new_list = self.tclient.create_list(name=list_name, board_id=board.id)
+        print(new_list)
+        # Printer.print_board(board, [new_list["id"]])
+
     def print_card(self, card_shortcut: str):
         card = self._get_card(card_shortcut)
         self.printer.print_card(card, self.board)
