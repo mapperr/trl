@@ -84,7 +84,15 @@ class Usecases:
 
     def create_list(self, list_name: str, after_list_shortcut: str | None):
         board = self._get_board()
-        new_list = self.tclient.create_list(name=list_name, board_id=board.id)
+        position = 0
+        if after_list_shortcut:
+            matching_lists: List[TrlList] = Normalizer.get_matches(
+                after_list_shortcut, board.lists
+            )
+            if matching_lists:
+                position = matching_lists[0].raw_data["pos"] + 1
+        new_list = self.tclient.create_list(name=list_name,
+                                            board_id=board.id, position=position)
         print(new_list)
         # Printer.print_board(board, [new_list["id"]])
 
