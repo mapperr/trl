@@ -30,7 +30,7 @@ commands:
         with list_shortcuts you can show only selected lists and their cards
 
     l n <list_name> [<after_list_shortcut>]
-        create a new list on the board
+        create a new list on the board; position after the specified list
 
     ll
         shows only the board's lists
@@ -149,7 +149,6 @@ if __name__ == '__main__':
         usecases.print_board_members()
 
     elif args['l']:
-        breakpoint()
         new_command = args['n']
         if new_command:
             list_name = args['<list_name>']
