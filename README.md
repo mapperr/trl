@@ -44,6 +44,9 @@ Here is the usage (check `trl -h` too):
         shows lists and cards in the board you have currently selected
         with list_shortcut you can show cards of a single list
 
+    trl l n <list_name> [<after_list_shortcut>]
+        create a new list on the board; position after the specified list
+
     trl ll
         shows only the board's lists
 
