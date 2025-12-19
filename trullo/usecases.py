@@ -86,6 +86,8 @@ class Usecases:
         board = self._get_board()
         position = 0
         if after_list_shortcut:
+            # Try to find matching list; if multiple matches existing, use the first one
+            # and compute the position right next to it
             matching_lists: List[TrlList] = Normalizer.get_matches(
                 after_list_shortcut, board.lists
             )
@@ -94,7 +96,6 @@ class Usecases:
         new_list = self.tclient.create_list(name=list_name,
                                             board_id=board.id, position=position)
         print(new_list)
-        # Printer.print_board(board, [new_list["id"]])
 
     def print_card(self, card_shortcut: str):
         card = self._get_card(card_shortcut)
