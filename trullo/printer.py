@@ -69,6 +69,7 @@ class Printer:
         formatted_desc = '\t' + str(d['desc']).replace('\n', '\n\t')
 
         print(f'{d["shortUrl"]}')
+        print(f'[ {board.find_list(d["idList"]).raw_data["name"]} ]')
         print('-------------------------------------')
         print(f'{d["name"]}')
         if len(d['labels']) > 0:

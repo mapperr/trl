@@ -29,3 +29,8 @@ class TrlBoard(Shortcuttable):
         for member in self.members:
             if member.id == id:
                 return member
+
+    def find_list(self, id: str) -> TrlList | None:
+        for list_ in self.lists:
+            if list_.id == id:
+                return list_
