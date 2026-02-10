@@ -44,9 +44,12 @@ class TClient:
         return self.handle_res(
             requests.delete(self.base_url + path, self.build_auth_params()))
 
-    def put(self, path: str) -> Dict:
+    def put(self, path: str, **data) -> Dict:
         return self.handle_res(
-            requests.put(self.base_url + path, self.build_auth_params()))
+            requests.put(
+                self.base_url + path, self.build_auth_params() | data
+            )
+        )
 
     def get_boards(self) -> List[TrlBoard]:
         res = self.get('/members/me/boards?lists=open')
@@ -147,14 +150,13 @@ class TClient:
         self.put(api_path)
 
     def edit_card(self, card_id: str, name: str = None, desc: str = None):
-        api_path = f'/cards/{card_id}?'
+        api_path = f'/cards/{card_id}'
+        data = {}
         if name is not None:
-            api_path += '' if api_path.endswith('?') else '&'
-            api_path += f'name={name}'
+            data["name"] = name
         if desc is not None:
-            api_path += '' if api_path.endswith('?') else '&'
-            api_path += f'desc={desc}'
-        self.put(api_path)
+            data["desc"] = desc
+        self.put(api_path, **data)
 
     def comment_card(self, card_id: str, comment: str):
         api_path = f'/cards/{card_id}/actions/comments'
@@ -162,13 +164,14 @@ class TClient:
 
     def new_card(self, list_id: str, name: str = None, desc: str = None, member_ids:
                  list[str] | None = None, label_ids: list[str] | None = None):
-        api_path = f'/cards/?idList={list_id}'
+        api_path = f'/cards'
+        data: dict[str, str | list[str]] = {"idList": list_id}
         if member_ids:
-            api_path += f"&idMembers={','.join(member_ids)}"
+            data["idMembers"] = member_ids
         if label_ids:
-            api_path += f"&idLabels={','.join(label_ids)}"
+            data["idLabels"] = label_ids
         if name is not None:
-            api_path += f'&name={name}'
+            data["name"] = name
         if desc is not None:
-            api_path += f'&desc={desc}'
-        return self.post(api_path)
+            data["desc"] = desc
+        return self.post(api_path, **data)

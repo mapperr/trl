@@ -2,7 +2,6 @@ import json
 import os
 import subprocess
 import tempfile
-import urllib
 from typing import Optional, Tuple, List
 
 import attr
@@ -228,8 +227,7 @@ class Usecases:
             "lines after that are the card description\n" \
             f"{clean_card_name}\n{card_description}"
         lines = self._write_to_temp_file(tempfile_suffix, content)
-        return urllib.parse.quote(lines[1].replace('\n', ''), safe=''), \
-               urllib.parse.quote(str.join('', lines[2:]), safe='')
+        return lines[1].replace('\n', ''), str.join('', lines[2:])
 
     def _write_to_temp_file(self, suffix: str, content: str) -> list[str]:
         tmpfile_path = f'{tempfile.gettempdir()}/.trl-{suffix}.md'
