@@ -42,7 +42,10 @@ class TClient:
 
     def delete(self, path: str) -> Dict:
         return self.handle_res(
-            requests.delete(self.base_url + path, self.build_auth_params()))
+            requests.delete(
+                self.base_url + path, data=self.build_auth_params()
+            )
+        )
 
     def put(self, path: str, **data) -> Dict:
         return self.handle_res(
