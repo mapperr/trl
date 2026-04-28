@@ -61,8 +61,8 @@ class Usecases:
             matching_names = \
                 [board.get_normalized_name() for board in matching_boards]
             print(
-                f'shortcut [{board_shortcut}] matches more than one board: '
-                f'{matching_names}')
+                f'shortcut [{board_shortcut}] matches more than one board:\n- '
+                f'{"\n- ".join(matching_names)}')
             return
         board = matching_boards[0]
 
@@ -115,8 +115,8 @@ class Usecases:
                 [list_.get_normalized_name() for list_ in matching_lists]
             print(
                 f'shortcut [{target_list_shortcut}] '
-                f'matches more than one list: '
-                f'{matching_names}')
+                f'matches more than one list:\n- '
+                f'{"\n- ".join(matching_names)}')
             exit(1)
 
         if len(matching_lists) == 0:
@@ -161,8 +161,8 @@ class Usecases:
                  matching_lists]
             print(
                 f'shortcut [{target_list_shortcut}] '
-                f'matches more than one list: '
-                f'{matching_names}')
+                f'matches more than one list:\n- '
+                f'{"\n- ".join(matching_names)}')
             exit(1)
 
         if len(matching_lists) == 0:
@@ -195,8 +195,8 @@ class Usecases:
                  for matching_card in matching_cards]
             print(
                 f'shortcut [{card_shortcut}] '
-                f'matches more than one card: '
-                f'{matching_names}')
+                f'matches more than one card:\n- '
+                f'{"\n- ".join(matching_names)}')
             exit(1)
 
         if len(matching_cards) == 0:
