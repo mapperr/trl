@@ -1,4 +1,5 @@
 from typing import List, Optional
+import re
 
 import attr
 
@@ -100,8 +101,25 @@ class Printer:
                 if item.due:
                     extras.append(item.due)
                 suffix = f' ({", ".join(extras)})' if extras else ''
-                print(f'[{box}] {item.name}{suffix}')
+                print(f'[{box}] {Printer._resolve_card_links(item.name, board)}{suffix}')
             print()
+
+    @staticmethod
+    def _resolve_card_links(text: str, board: TrlBoard) -> str:
+        def replace(match: re.Match) -> str:
+            short_link = match.group(1)
+            card = next(
+                (c for c in board.cards if c.short_link == short_link), None
+            )
+            if card is not None:
+                return f'[{card.raw_data["name"]}]'
+            return match.group(0)
+
+        return re.sub(
+            r'https://trello\.com/c/([A-Za-z0-9]+)(?:/[^\s]*)?',
+            replace,
+            text,
+        )
 
     @staticmethod
     def _there_is_a_match(normalized_name: str, shortcuts: List[str]) -> bool:
