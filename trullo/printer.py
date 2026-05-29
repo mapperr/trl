@@ -88,6 +88,20 @@ class Printer:
         print()
         print(formatted_desc)
         print()
+        for checklist in board.find_checklists_for_card(card.id):
+            print(checklist.name)
+            for item in checklist.check_items:
+                box = 'x' if item.state == 'complete' else ' '
+                extras = []
+                if item.id_member:
+                    member = board.find_member(item.id_member)
+                    if member:
+                        extras.append(member.fullname)
+                if item.due:
+                    extras.append(item.due)
+                suffix = f' ({", ".join(extras)})' if extras else ''
+                print(f'[{box}] {item.name}{suffix}')
+            print()
 
     @staticmethod
     def _there_is_a_match(normalized_name: str, shortcuts: List[str]) -> bool:
