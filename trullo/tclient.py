@@ -7,6 +7,7 @@ import requests
 
 from trullo.trl_board import TrlBoard
 from trullo.trl_card import TrlCard
+from trullo.trl_checklist import TrlCheckItem, TrlChecklist
 from trullo.trl_label import TrlLabel
 from trullo.trl_list import TrlList
 from trullo.trl_member import TrlMember
@@ -70,7 +71,7 @@ class TClient:
                     lists = self._extract_lists(v)
             if not board_closed:
                 boards.append(
-                    TrlBoard(board_id, raw_board['shortLink'], lists, [], [], [],
+                    TrlBoard(board_id, raw_board['shortLink'], lists, [], [], [], [],
                              raw_board))
         return boards
 
@@ -79,8 +80,9 @@ class TClient:
                        f'/board/{board_id}/labels,'
                        f'/board/{board_id}/lists/open,'
                        f'/board/{board_id}/cards/open,'
-                       f'/board/{board_id}/members')
-        board = TrlBoard(board_id, board_id, [], [], [], [], res[0]['200'])
+                       f'/board/{board_id}/members,'
+                       f'/board/{board_id}/checklists')
+        board = TrlBoard(board_id, board_id, [], [], [], [], [], res[0]['200'])
         for item in res[1]['200']:
             label = TrlLabel(item['id'],
                              item['name'],
@@ -96,6 +98,20 @@ class TClient:
         for item in res[4]['200']:
             member = TrlMember(item['id'], item['fullName'], item['username'], item)
             board.members.append(member)
+        for item in res[5]['200']:
+            check_items = [
+                TrlCheckItem(
+                    ci['id'],
+                    ci['name'],
+                    ci['state'],
+                    ci.get('due'),
+                    ci.get('idMember'),
+                )
+                for ci in item.get('checkItems', [])
+            ]
+            checklist = TrlChecklist(item['id'], item['name'], item['idCard'],
+                                     check_items)
+            board.checklists.append(checklist)
         return board
 
     def _extract_lists(self, raw_list: Dict) -> List[TrlList]:
