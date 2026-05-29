@@ -106,17 +106,18 @@ class Printer:
 
     @staticmethod
     def _resolve_card_links(text: str, board: TrlBoard) -> str:
+        card_by_short_link = {c.short_link: c for c in board.cards}
+
         def replace(match: re.Match) -> str:
-            short_link = match.group(1)
-            card = next(
-                (c for c in board.cards if c.short_link == short_link), None
-            )
+            short_link = match.group("short_link")
+            trailing = match.group("trailing") or ""
+            card = card_by_short_link.get(short_link)
             if card is not None:
-                return f'[{card.raw_data["name"]}]'
+                return f'[{card.raw_data["name"]}]{trailing}'
             return match.group(0)
 
         return re.sub(
-            r'https://trello\.com/c/([A-Za-z0-9]+)(?:/[^\s]*)?',
+            r'https://trello\.com/c/(?P<short_link>[A-Za-z0-9]+)(?:/[^\s\)\]\}\>,\.\!\?:;]*)?(?P<trailing>[\)\]\}\>,\.\!\?:;])?',
             replace,
             text,
         )
