@@ -70,7 +70,7 @@ trello development board: https://trello.com/b/fuK3ff2z
 
 """
 import logging
-import tempfile
+from pathlib import Path
 
 from docopt import docopt
 
@@ -88,8 +88,9 @@ logger = logging.getLogger(__name__)
 if __name__ == '__main__':
     args = docopt(__doc__, version='Trullo beta')
 
-    tmpdir = tempfile.gettempdir()
-    selected_board_filepath = f'{tmpdir}/trl-selected-board'
+    confdir = Path("~/.config/trullo").expanduser()
+    confdir.mkdir(parents=True, exist_ok=True)
+    selected_board_filepath = f'{confdir}/selected-board'
 
     usecases = Usecases(TConfig(selected_board_filepath),
                         TClient(),
