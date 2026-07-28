@@ -64,6 +64,12 @@ class Usecases:
                 f'shortcut [{board_shortcut}] matches more than one board:\n- '
                 f'{"\n- ".join(matching_names)}')
             return
+        elif len(matching_boards) == 0:
+            print(
+                f'shortcut [{board_shortcut}] '
+                f'does not match any board')
+            exit(1)
+
         board = matching_boards[0]
 
         # file
